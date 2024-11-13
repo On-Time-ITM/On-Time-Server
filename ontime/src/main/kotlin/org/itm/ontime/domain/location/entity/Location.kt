@@ -18,7 +18,4 @@ class Location(
     private val longitude: Double
 ) : PrimaryKeyEntity() {
 
-    @Column(nullable = false)
-    private val updatedAt: LocalDateTime = LocalDateTime.now()
-
 }

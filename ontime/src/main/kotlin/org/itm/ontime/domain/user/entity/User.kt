@@ -1,11 +1,12 @@
 package org.itm.ontime.domain.user.entity
 
-import com.github.f4b6a3.ulid.UlidCreator
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import org.itm.ontime.domain.Attendance.entity.Attendance
 import org.itm.ontime.domain.PrimaryKeyEntity
-import java.util.*
+import org.itm.ontime.domain.team.entity.TeamMember
+import org.itm.ontime.global.common.BaseEntity
 
 @Entity
 class User(
@@ -17,8 +18,12 @@ class User(
 
     @Column(nullable = true)
     private val kakaoId: String? = null
-) : PrimaryKeyEntity() {
+) : BaseEntity() {
 
-    // TODO : Team, Attendance mapping
+    @OneToMany(mappedBy = "user")
+    private val teamMemberships: MutableList<TeamMember> = mutableListOf()
+
+    @OneToMany(mappedBy = "user")
+    private val attendances: MutableList<Attendance> = mutableListOf()
 
 }

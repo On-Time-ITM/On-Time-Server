@@ -3,6 +3,7 @@ package org.itm.ontime.domain.team.entity
 import jakarta.persistence.*
 import org.itm.ontime.domain.PrimaryKeyEntity
 import org.itm.ontime.domain.meeting.entity.Meeting
+import org.itm.ontime.global.common.BaseEntity
 import java.time.LocalDateTime
 
 
@@ -10,15 +11,12 @@ import java.time.LocalDateTime
 class Team(
     @Column(nullable = false)
     private val name: String
-) : PrimaryKeyEntity() {
+) : BaseEntity() {
 
     @OneToMany(mappedBy = "team")
     private val members: MutableList<TeamMember> = mutableListOf()
 
     @OneToMany(mappedBy = "team")
     private val meetings: MutableList<Meeting> = mutableListOf()
-
-    @Column(nullable = false)
-    private val createdAt: LocalDateTime = LocalDateTime.now()
 
 }

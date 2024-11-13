@@ -20,7 +20,7 @@ class GlobalExceptionHandler {
     ): ResponseEntity<ErrorResponse> {
 
         log.error("handleMethodArgumentNotValidException", exception)
-        
+
         val bindingResult = exception.bindingResult
             ?: return ResponseEntity
                 .status(ErrorCode.INVALID_INPUT_VALUE.status)

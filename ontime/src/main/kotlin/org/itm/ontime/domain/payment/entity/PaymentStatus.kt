@@ -1,6 +1,7 @@
 package org.itm.ontime.domain.payment.entity
 
 enum class PaymentStatus {
-    REQUIRED,
+    COMPLETED,
+    PENDING,
     NOT_REQUIRED
 }

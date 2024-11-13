@@ -2,11 +2,10 @@ package org.itm.ontime.domain.meeting.entity
 
 import jakarta.persistence.*
 import org.itm.ontime.domain.Attendance.entity.Attendance
-import org.itm.ontime.domain.PrimaryKeyEntity
 import org.itm.ontime.domain.team.entity.Team
+import org.itm.ontime.global.common.BaseEntity
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.util.UUID
 
 @Entity
 class Meeting(
@@ -25,14 +24,12 @@ class Meeting(
 
     @Column(nullable = false)
     private val bankAccountNumber: String
-) : PrimaryKeyEntity() {
+) : BaseEntity() {
 
     @OneToMany(mappedBy = "meeting")
     private val attendances: MutableList<Attendance> = mutableListOf()
 
     @Column(nullable = true)
     private var qrCode: String ?= null
-    // TODO : private var 이 아닌 ...
-    // TODO : qrCode를 무조건 하나 생성하도록 해서 Non-nullable 로 하는 건?
 
 }
