@@ -25,6 +25,7 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
+    @Transactional
     fun signUp(request: SignUpRequest) : TokenResponse {
         if (userRepository.existsByPhoneNumber(request.phoneNumber)) {
             throw DuplicationPhoneNumberException(request.phoneNumber)
@@ -73,7 +74,8 @@ class AuthService(
         return TokenResponse(
             accessToken = accessToken,
             refreshToken = refreshToken,
-            expiresIn = jwtTokenProvider.getAccessTokenValidityInSeconds()
+            expiresIn = jwtTokenProvider.getAccessTokenValidityInSeconds(),
+            userId = userId
         )
     }
 
