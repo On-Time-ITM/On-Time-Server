@@ -15,6 +15,7 @@ import org.itm.ontime.presentation.auth.request.LoginRequest
 import org.itm.ontime.presentation.auth.request.SignUpRequest
 import org.itm.ontime.presentation.auth.request.TokenRefreshRequest
 import org.itm.ontime.presentation.auth.response.TokenResponse
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -41,8 +42,9 @@ class AuthController(
     @PostMapping("/signup")
     fun signUp(
         @Valid @RequestBody request: SignUpRequest
-    ): TokenResponse {
-        return authService.signUp(request)
+    ): ResponseEntity<TokenResponse> {
+        val response = authService.signUp(request)
+        return ResponseEntity.ok(response)
     }
 
     @Operation(summary = "Sign Up", description = "Login with phone number and password")
@@ -54,8 +56,9 @@ class AuthController(
     @PostMapping("/login")
     fun login(
         @Valid @RequestBody request: LoginRequest
-    ): TokenResponse {
-        return authService.login(request)
+    ): ResponseEntity<TokenResponse> {
+        val response = authService.login(request)
+        return ResponseEntity.ok(response)
     }
 
     @Operation(summary = "Refresh token", description = "Get new access token using refresh token")
@@ -67,12 +70,16 @@ class AuthController(
     @PostMapping("/refresh")
     fun refreshToken(
         @Valid @RequestBody request: TokenRefreshRequest
-    ): TokenResponse {
-        return authService.refreshToken(request)
+    ): ResponseEntity<TokenResponse> {
+        val response = authService.refreshToken(request)
+        return ResponseEntity.ok(response)
     }
 
     @PostMapping("/logout")
-    fun logout(@AuthenticationPrincipal userId: UUID) {
+    fun logout(
+        @AuthenticationPrincipal userId: UUID
+    ): ResponseEntity<Unit> {
         authService.logout(userId)
+        return ResponseEntity.ok().build()
     }
 }
