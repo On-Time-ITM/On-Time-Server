@@ -1,9 +1,10 @@
 package org.itm.ontime.global.error
 
+import ErrorResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
-import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException
 import org.springframework.web.HttpRequestMethodNotSupportedException
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 

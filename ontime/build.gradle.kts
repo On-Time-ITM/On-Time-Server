@@ -1,10 +1,10 @@
 plugins {
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
-    id("org.springframework.boot") version "3.3.5"
-    id("io.spring.dependency-management") version "1.1.6"
+    kotlin("jvm") version "1.9.20"  // 버전 다운그레이드
+    kotlin("plugin.spring") version "1.9.20"
+    kotlin("plugin.jpa") version "1.9.20"
+    id("org.springframework.boot") version "3.2.0"  // 안정화된 버전으로 변경
+    id("io.spring.dependency-management") version "1.1.4"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
-    kotlin("plugin.jpa") version "1.9.25"
 }
 
 group = "org.itm"
@@ -28,8 +28,7 @@ repositories {
 }
 
 extra["snippetsDir"] = file("build/generated-snippets")
-extra["springAiVersion"] = "1.0.0-M3"
-extra["springCloudVersion"] = "2023.0.3"
+
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -38,14 +37,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
-    implementation("org.springframework.ai:spring-ai-postgresml-spring-boot-starter")
-    implementation("org.springframework.cloud:spring-cloud-config-server")
+    runtimeOnly("com.mysql:mysql-connector-j")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-    runtimeOnly("org.postgresql:postgresql")
-    developmentOnly("org.springframework.ai:spring-ai-spring-boot-docker-compose")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -61,10 +56,7 @@ dependencies {
 }
 
 dependencyManagement {
-    imports {
-        mavenBom("org.springframework.ai:spring-ai-bom:${property("springAiVersion")}")
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-    }
+
 }
 
 kotlin {

@@ -32,10 +32,15 @@ class SecurityConfig(
             }
             .authorizeHttpRequests {
                 it.requestMatchers(
-                    "/api/auth/signup",
-                    "/api/auth/login",
+                    "/",
+                    "/api/v1/auth/**",
+                    "/swagger-ui.html",
                     "/swagger-ui/**",
-                    "/v3/api-docs/**"
+                    "/v3/api-docs/**",
+                    "/swagger-resources/**",
+                    "/webjars/**",
+                    // API Docs JSON 파일 접근 허용
+                    "/v3/api-docs.yaml"
                 ).permitAll()
                     .anyRequest().authenticated()
             }

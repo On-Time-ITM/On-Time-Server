@@ -1,54 +1,56 @@
-package org.itm.ontime.global.error
-
 import io.swagger.v3.oas.annotations.media.Schema
-
+import org.itm.ontime.global.error.ErrorCode
 
 @Schema(description = "Error Response")
 data class ErrorResponse(
-    @Schema(description = "Success status of the request", example = "false")
-    val success: Boolean = false,
+    @Schema(description = "Error Code", example = "C001")
+    val code: String,
 
-    @Schema(description = "Detailed error information")
-    val error: ErrorDetail
+    @Schema(description = "Error Message", example = "Invalid input value")
+    val message: String,
+
+    @Schema(description = "HTTP Status Code", example = "400")
+    val status: Int,
+
+    @Schema(description = "Field Error List")
+    val errors: List<FieldError>? = null
 ) {
-    @Schema(description = "Detailed error information")
-    data class ErrorDetail(
-        @Schema(description = "Error code identifying the error type", example = "USER_NOT_FOUND")
-        val code: String,
-
-        @Schema(description = "Human readable error message", example = "User not found")
-        val message: String,
-
-        @Schema(description = "List of field validation errors", nullable = true)
-        val errors: List<FieldError>? = null
-    )
-
-    @Schema(description = "Field validation error details")
+    @Schema(description = "Field Error Information")
     data class FieldError(
-        @Schema(description = "Name of the field that caused the error", example = "username")
+        @Schema(description = "Field where the error occurred", example = "email")
         val field: String,
 
-        @Schema(description = "The invalid value that was provided", example = "")
+        @Schema(description = "Value that caused the error", example = "invalid-email")
         val value: Any?,
 
-        @Schema(description = "Reason why the field value is invalid", example = "This field is required")
+        @Schema(description = "Reason for the error", example = "Invalid email format")
         val reason: String
     )
 
     companion object {
-        fun of(errorCode: ErrorCode) = ErrorResponse(
-            error = ErrorDetail(
-                code = errorCode.code,
-                message = errorCode.message
-            )
-        )
-
-        fun of(errorCode: ErrorCode, errors: List<FieldError>) = ErrorResponse(
-            error = ErrorDetail(
+        fun of(errorCode: ErrorCode): ErrorResponse {
+            return ErrorResponse(
                 code = errorCode.code,
                 message = errorCode.message,
+                status = errorCode.status
+            )
+        }
+
+        fun of(errorCode: ErrorCode, message: String): ErrorResponse {
+            return ErrorResponse(
+                code = errorCode.code,
+                message = message,
+                status = errorCode.status
+            )
+        }
+
+        fun of(errorCode: ErrorCode, errors: List<FieldError>): ErrorResponse {
+            return ErrorResponse(
+                code = errorCode.code,
+                message = errorCode.message,
+                status = errorCode.status,
                 errors = errors
             )
-        )
+        }
     }
 }

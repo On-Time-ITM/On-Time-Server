@@ -1,18 +1,30 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ontime?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ontime
+    password: ontime
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # 개발 환경에서는 update, 운영 환경에서는 validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
 springdoc:
-  swagger-ui:
-    path: /swagger-ui.html  # Swagger UI 경로
-    groups-order: DESC
-    operationsSorter: method
-    disable-swagger-default-url: true
-    display-request-duration: true
   api-docs:
-    path: /api-docs  # OpenAPI 명세 경로
-  show-actuator: true
-  default-consumes-media-type: application/json
-  default-produces-media-type: application/json
-  paths-to-match:
-    - /api/**
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
+    operations-sorter: alpha
+
 jwt:
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   access-token-validity-in-seconds: 3600    # 1시간
   refresh-token-validity-in-seconds: 1209600 # 2주
+server:
+  forward-headers-strategy: FRAMEWORK
