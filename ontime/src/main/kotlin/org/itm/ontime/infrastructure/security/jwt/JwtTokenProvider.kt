@@ -1,10 +1,10 @@
-package org.itm.ontime.global.security.jwt
+package org.itm.ontime.infrastructure.security.jwt
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
-import org.itm.ontime.domain.auth.exception.common.ExpiredTokenException
-import org.itm.ontime.domain.auth.exception.common.InvalidTokenException
+import org.itm.ontime.application.auth.exception.common.ExpiredTokenException
+import org.itm.ontime.application.auth.exception.common.InvalidTokenException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority

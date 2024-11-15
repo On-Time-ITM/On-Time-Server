@@ -1,10 +1,10 @@
-package org.itm.ontime.global.security.filter
+package org.itm.ontime.infrastructure.security.filter
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.itm.ontime.global.security.CustomUserDetails
-import org.itm.ontime.global.security.jwt.JwtTokenProvider
+import org.itm.ontime.infrastructure.security.CustomUserDetails
+import org.itm.ontime.infrastructure.security.jwt.JwtTokenProvider
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter

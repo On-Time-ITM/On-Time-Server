@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.itm.ontime.application.auth.service.AuthService
-import org.itm.ontime.domain.auth.exception.common.InvalidRefreshTokenException
-import org.itm.ontime.domain.auth.exception.local.DuplicationPhoneNumberException
-import org.itm.ontime.domain.auth.exception.local.InvalidPasswordException
-import org.itm.ontime.global.security.CustomUserDetails
+import org.itm.ontime.application.auth.exception.common.InvalidRefreshTokenException
+import org.itm.ontime.application.auth.exception.local.DuplicationPhoneNumberException
+import org.itm.ontime.application.auth.exception.local.InvalidPasswordException
+import org.itm.ontime.infrastructure.security.CustomUserDetails
 import org.itm.ontime.presentation.auth.request.LoginRequest
 import org.itm.ontime.presentation.auth.request.SignUpRequest
 import org.itm.ontime.presentation.auth.request.TokenRefreshRequest

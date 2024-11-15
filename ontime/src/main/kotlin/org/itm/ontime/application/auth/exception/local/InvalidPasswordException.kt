@@ -1,4 +1,4 @@
-package org.itm.ontime.domain.auth.exception.local
+package org.itm.ontime.application.auth.exception.local
 
 import io.swagger.v3.oas.annotations.media.Schema
 import org.itm.ontime.global.error.BusinessException

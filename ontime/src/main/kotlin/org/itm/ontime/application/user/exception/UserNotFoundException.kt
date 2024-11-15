@@ -1,4 +1,4 @@
-package org.itm.ontime.domain.user.exception
+package org.itm.ontime.application.user.exception
 
 import io.swagger.v3.oas.annotations.media.Schema
 import org.itm.ontime.global.error.BusinessException

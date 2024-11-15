@@ -2,15 +2,15 @@ package org.itm.ontime.application.auth.service
 
 import jakarta.transaction.Transactional
 import org.itm.ontime.domain.auth.entity.RefreshToken
-import org.itm.ontime.domain.auth.exception.common.InvalidRefreshTokenException
+import org.itm.ontime.application.auth.exception.common.InvalidRefreshTokenException
 import org.itm.ontime.presentation.auth.response.TokenResponse
-import org.itm.ontime.domain.auth.exception.local.DuplicationPhoneNumberException
-import org.itm.ontime.domain.auth.exception.local.InvalidPasswordException
+import org.itm.ontime.application.auth.exception.local.DuplicationPhoneNumberException
+import org.itm.ontime.application.auth.exception.local.InvalidPasswordException
 import org.itm.ontime.domain.auth.repository.RefreshTokenRepository
 import org.itm.ontime.domain.user.entity.User
-import org.itm.ontime.domain.user.exception.UserNotFoundException
+import org.itm.ontime.application.user.exception.UserNotFoundException
 import org.itm.ontime.domain.user.repository.UserRepository
-import org.itm.ontime.global.security.jwt.JwtTokenProvider
+import org.itm.ontime.infrastructure.security.jwt.JwtTokenProvider
 import org.itm.ontime.presentation.auth.request.LoginRequest
 import org.itm.ontime.presentation.auth.request.SignUpRequest
 import org.itm.ontime.presentation.auth.request.TokenRefreshRequest

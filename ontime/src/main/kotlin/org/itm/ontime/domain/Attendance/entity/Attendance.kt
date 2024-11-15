@@ -1,10 +1,10 @@
-package org.itm.ontime.domain.Attendance.entity
+package org.itm.ontime.domain.attendance.entity
 
 import jakarta.persistence.*
 import org.itm.ontime.domain.PrimaryKeyEntity
 import org.itm.ontime.domain.meeting.entity.Meeting
 import org.itm.ontime.domain.payment.entity.PaymentStatus
-import org.itm.ontime.domain.auth.entity.User
+import org.itm.ontime.domain.user.entity.User
 import java.time.LocalDateTime
 
 @Entity

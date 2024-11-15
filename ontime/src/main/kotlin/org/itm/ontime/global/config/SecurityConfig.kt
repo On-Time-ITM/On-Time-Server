@@ -1,7 +1,7 @@
-package org.itm.ontime.global.security.config
+package org.itm.ontime.global.config
 
-import org.itm.ontime.global.security.filter.JwtAuthenticationFilter
-import org.itm.ontime.global.security.jwt.JwtTokenProvider
+import org.itm.ontime.infrastructure.security.filter.JwtAuthenticationFilter
+import org.itm.ontime.infrastructure.security.jwt.JwtTokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
