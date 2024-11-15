@@ -14,6 +14,18 @@ class GlobalExceptionHandler {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    @ExceptionHandler(BusinessException::class)
+    protected fun handleBusinessException(
+        exception: BusinessException
+    ): ResponseEntity<ErrorResponse> {
+
+        log.error("handleBusinessException", exception)
+
+        return ResponseEntity
+            .status(exception.errorCode.status)
+            .body(ErrorResponse.of(exception.errorCode))
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException::class)
     protected fun handleMethodArgumentNotValidException(
         exception: MethodArgumentNotValidException
@@ -39,30 +51,6 @@ class GlobalExceptionHandler {
             .body(ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, errors))
     }
 
-    @ExceptionHandler(BaseException::class)
-    protected fun handleBaseException(
-        exception: BaseException
-    ): ResponseEntity<ErrorResponse> {
-
-        log.error("handleBaseException", exception)
-
-        return ResponseEntity
-            .status(exception.errorCode.status)
-            .body(ErrorResponse.of(exception.errorCode))
-    }
-
-    @ExceptionHandler(Exception::class)
-    protected fun handleException(
-        exception: Exception
-    ): ResponseEntity<ErrorResponse> {
-
-        log.error("handleException", exception)
-
-        return ResponseEntity
-            .status(ErrorCode.INTERNAL_SERVER_ERROR.status)
-            .body(ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR))
-    }
-
     @ExceptionHandler(AccessDeniedException::class)
     protected fun handleAccessDeniedException(
         exception: AccessDeniedException
@@ -86,4 +74,17 @@ class GlobalExceptionHandler {
             .status(ErrorCode.METHOD_NOT_ALLOWED.status)
             .body(ErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED))
     }
+
+    @ExceptionHandler(Exception::class)
+    protected fun handleException(
+        exception: Exception
+    ): ResponseEntity<ErrorResponse> {
+
+        log.error("handleException", exception)
+
+        return ResponseEntity
+            .status(ErrorCode.INTERNAL_SERVER_ERROR.status)
+            .body(ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR))
+    }
+
 }

@@ -4,8 +4,7 @@ import jakarta.persistence.*
 import org.itm.ontime.domain.PrimaryKeyEntity
 import org.itm.ontime.domain.meeting.entity.Meeting
 import org.itm.ontime.domain.payment.entity.PaymentStatus
-import org.itm.ontime.domain.user.entity.User
-import org.itm.ontime.global.common.BaseEntity
+import org.itm.ontime.domain.auth.entity.User
 import java.time.LocalDateTime
 
 @Entity

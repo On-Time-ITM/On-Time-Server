@@ -1,10 +1,9 @@
-package org.itm.ontime.domain.user.entity
+package org.itm.ontime.domain.auth.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.OneToMany
 import org.itm.ontime.domain.Attendance.entity.Attendance
-import org.itm.ontime.domain.PrimaryKeyEntity
 import org.itm.ontime.domain.team.entity.TeamMember
 import org.itm.ontime.global.common.BaseEntity
 
