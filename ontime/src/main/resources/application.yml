@@ -1,18 +1,19 @@
 spring:
   datasource:
+    url: jdbc:mysql://localhost:3306/on-time?serverTimezone=Asia/Seoul
+    username: developer
+    password: ontime24
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ontime?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: ontime
-    password: ontime
-
   jpa:
     hibernate:
-      ddl-auto: update  # 개발 환경에서는 update, 운영 환경에서는 validate
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  jackson:
+    time-zone: Asia/Seoul
 
 springdoc:
   api-docs:

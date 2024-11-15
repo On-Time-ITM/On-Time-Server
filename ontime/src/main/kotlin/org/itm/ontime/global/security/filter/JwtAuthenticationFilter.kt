@@ -3,6 +3,7 @@ package org.itm.ontime.global.security.filter
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.itm.ontime.global.security.CustomUserDetails
 import org.itm.ontime.global.security.jwt.JwtTokenProvider
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -18,9 +19,11 @@ class JwtAuthenticationFilter(
     ) {
         try {
             val token = resolveToken(request)
-            if (token != null) {
+            if (token != null && jwtTokenProvider.validateToken(token)) {
                 val userId = jwtTokenProvider.getUserId(token)
-                val authentication = UsernamePasswordAuthenticationToken(userId, "", listOf())
+                val authorities = jwtTokenProvider.getAuthorities(token)
+                val userDetails = CustomUserDetails(userId, authorities)
+                val authentication = UsernamePasswordAuthenticationToken(userDetails, "", authorities)
                 SecurityContextHolder.getContext().authentication = authentication
             }
         } catch (e: Exception) {

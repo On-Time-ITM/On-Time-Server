@@ -1,5 +1,6 @@
 package org.itm.ontime.global.common
 
+import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.MappedSuperclass
 import org.itm.ontime.domain.PrimaryKeyEntity
@@ -13,9 +14,11 @@ import java.time.LocalDateTime
 abstract class BaseEntity : PrimaryKeyEntity() {
 
     @CreatedDate
+    @Column
     val createdDate: LocalDateTime = LocalDateTime.now()
 
     @LastModifiedDate
+    @Column
     var updatedAt: LocalDateTime ?= null
 
 }

@@ -11,6 +11,7 @@ import org.itm.ontime.application.auth.service.AuthService
 import org.itm.ontime.domain.auth.exception.common.InvalidRefreshTokenException
 import org.itm.ontime.domain.auth.exception.local.DuplicationPhoneNumberException
 import org.itm.ontime.domain.auth.exception.local.InvalidPasswordException
+import org.itm.ontime.global.security.CustomUserDetails
 import org.itm.ontime.presentation.auth.request.LoginRequest
 import org.itm.ontime.presentation.auth.request.SignUpRequest
 import org.itm.ontime.presentation.auth.request.TokenRefreshRequest
@@ -48,10 +49,11 @@ class AuthController(
     }
 
     @Operation(summary = "Sign Up", description = "Login with phone number and password")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Success"),
-        ApiResponse(responseCode = "400", description = "Invalid credentials",
-            content = [Content(schema = Schema(implementation = InvalidPasswordException::class))])
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Success"),
+            ApiResponse(responseCode = "400", description = "Invalid credentials",
+                content = [Content(schema = Schema(implementation = InvalidPasswordException::class))])
     ])
     @PostMapping("/login")
     fun login(
@@ -62,10 +64,11 @@ class AuthController(
     }
 
     @Operation(summary = "Refresh token", description = "Get new access token using refresh token")
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Success"),
-        ApiResponse(responseCode = "401", description = "Invalid refresh token",
-            content = [Content(schema = Schema(implementation = InvalidRefreshTokenException::class))])
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Success"),
+            ApiResponse(responseCode = "401", description = "Invalid refresh token",
+                content = [Content(schema = Schema(implementation = InvalidRefreshTokenException::class))])
     ])
     @PostMapping("/refresh")
     fun refreshToken(
@@ -75,11 +78,22 @@ class AuthController(
         return ResponseEntity.ok(response)
     }
 
+    @Operation(
+        summary = "Logout",
+        description = "Logout the currently authenticated user and invalidate the access token."
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Logout successful"),
+            ApiResponse(responseCode = "401", description = "Unauthorized, invalid or expired access token")
+        ]
+    )
     @PostMapping("/logout")
-    fun logout(
-        @AuthenticationPrincipal userId: UUID
-    ): ResponseEntity<Unit> {
-        authService.logout(userId)
+    fun logout(@AuthenticationPrincipal userDetails: CustomUserDetails?): ResponseEntity<Unit> {
+        if (userDetails != null) {
+            val userId = UUID.fromString(userDetails.username)
+            authService.logout(userId)
+        }
         return ResponseEntity.ok().build()
     }
 }

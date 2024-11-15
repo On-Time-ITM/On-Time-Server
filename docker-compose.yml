@@ -1,19 +1,19 @@
-version: '3.8'
+version: '3'
 
 services:
-  db:
+  mysql:
     image: mysql:8.0
-    container_name: on-time-mysql-dev
+    container_name: ontime-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - TZ=${TZ}
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-    env_file:
-      - ontime/.env
-    ports:
-      - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./init:/docker-entrypoint-initdb.d
-
-volumes:
-  mysql_data:
+      - ./mysql/data:/var/lib/mysql

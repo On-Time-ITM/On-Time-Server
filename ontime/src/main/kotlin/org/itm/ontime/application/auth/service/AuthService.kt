@@ -1,5 +1,6 @@
 package org.itm.ontime.application.auth.service
 
+import jakarta.transaction.Transactional
 import org.itm.ontime.domain.auth.entity.RefreshToken
 import org.itm.ontime.domain.auth.exception.common.InvalidRefreshTokenException
 import org.itm.ontime.presentation.auth.response.TokenResponse
@@ -31,13 +32,14 @@ class AuthService(
 
         val user = userRepository.save(User(
             phoneNumber = request.phoneNumber,
-            password = request.password,
+            password = passwordEncoder.encode(request.password),
             name = request.name
         ))
 
         return createTokens(user.id)
     }
 
+    @Transactional
     fun login(request: LoginRequest) : TokenResponse {
         val user = userRepository.findByPhoneNumber(request.phoneNumber)
             ?: throw UserNotFoundException(request.phoneNumber)
@@ -53,7 +55,8 @@ class AuthService(
         refreshTokenRepository.deleteByUserId(userId)
     }
 
-    private fun createTokens(userId: UUID) : TokenResponse {
+    @Transactional
+    fun createTokens(userId: UUID) : TokenResponse {
 
         refreshTokenRepository.deleteByUserId(userId)
 
@@ -74,6 +77,7 @@ class AuthService(
         )
     }
 
+    @Transactional
     fun refreshToken(request: TokenRefreshRequest): TokenResponse {
         val refreshToken = refreshTokenRepository.findByToken(request.refreshToken)
             ?: throw InvalidRefreshTokenException(request.refreshToken)
@@ -83,6 +87,7 @@ class AuthService(
             throw InvalidRefreshTokenException(request.refreshToken)
         }
 
-        return createTokens(refreshToken.userId)
+        return this.javaClass.getMethod("createTokens", UUID::class.java)
+            .invoke(this, refreshToken.userId) as TokenResponse
     }
 }

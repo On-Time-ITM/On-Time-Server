@@ -83,30 +83,15 @@ class JwtTokenProvider(
         }
     }
 
-    fun getUserId(token: String): Long {
-        return getClaims(token).subject.toLong()
+    fun getAuthorities(token: String): List<GrantedAuthority> {
+        val claims = getClaims(token)
+        val roles = claims["roles"] as List<*>?
+        return roles?.map { SimpleGrantedAuthority(it.toString()) } ?: emptyList()
+    }
+
+    fun getUserId(token: String): UUID {
+        return UUID.fromString(getClaims(token).subject)
     }
 
     fun getAccessTokenValidityInSeconds(): Long = accessTokenValidityInSeconds
-}
-
-// CustomUserDetails.kt
-class CustomUserDetails(
-    private val userId: Long
-) : UserDetails {
-    override fun getAuthorities(): Collection<GrantedAuthority> {
-        return listOf(SimpleGrantedAuthority("ROLE_USER"))
-    }
-
-    override fun getPassword(): String? = null
-
-    override fun getUsername(): String = userId.toString()
-
-    override fun isAccountNonExpired(): Boolean = true
-
-    override fun isAccountNonLocked(): Boolean = true
-
-    override fun isCredentialsNonExpired(): Boolean = true
-
-    override fun isEnabled(): Boolean = true
 }
