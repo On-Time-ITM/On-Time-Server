@@ -3,7 +3,6 @@ package org.itm.ontime.domain.location.entity
 import jakarta.persistence.*
 import org.itm.ontime.domain.PrimaryKeyEntity
 import org.itm.ontime.domain.user.entity.User
-import java.time.LocalDateTime
 
 @Entity
 class Location(

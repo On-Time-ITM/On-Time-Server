@@ -1,7 +1,7 @@
 package org.itm.ontime.domain.meeting.entity
 
 import jakarta.persistence.*
-import org.itm.ontime.domain.Attendance.entity.Attendance
+import org.itm.ontime.domain.attendance.entity.Attendance
 import org.itm.ontime.domain.team.entity.Team
 import org.itm.ontime.global.common.BaseEntity
 import java.math.BigDecimal
