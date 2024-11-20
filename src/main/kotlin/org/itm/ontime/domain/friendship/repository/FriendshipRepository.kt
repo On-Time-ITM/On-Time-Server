@@ -16,7 +16,7 @@ interface FriendshipRepository : JpaRepository<Friendship, UUID>{
         WHERE f.status = 'ACCEPTED' 
         AND (f.requester.id = :userId OR f.receiver.id = :userId)
     """)
-    fun findAllAcceptedFriendships(userId: UUID): List<Friendship>
+    fun findAllAcceptedFriendships(user: User): List<Friendship>
 
     @Query("""
         SELECT f FROM Friendship f 

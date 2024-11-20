@@ -100,7 +100,7 @@ class FriendshipService (
         val user = userRepository.findById(userId)
             .orElseThrow { UserNotFoundException.fromId(userId) }
 
-        return friendshipRepository.findAllAcceptedFriendships(userId)
+        return friendshipRepository.findAllAcceptedFriendships(user)
             .map { friendship -> // TODO : 아악
                 val friend = if (friendship.requester.id == userId) {
                     friendship.receiver
