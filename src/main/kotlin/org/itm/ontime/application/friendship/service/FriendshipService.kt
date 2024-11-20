@@ -108,7 +108,8 @@ class FriendshipService (
                 FriendResponse(
                     id = friend.id,
                     phoneNumber = friend.phoneNumber,
-                    name = friend.name
+                    name = friend.name,
+                    tardinessRate = friend.tardinessRate
                 )
             }
     }
@@ -124,7 +125,8 @@ class FriendshipService (
                     requester = FriendResponse(
                         id = friendship.requester.id,
                         phoneNumber = friendship.requester.phoneNumber,
-                        name = friendship.requester.name
+                        name = friendship.requester.name,
+                        tardinessRate = friendship.requester.tardinessRate
                     ),
                     createdAt = friendship.createdDate
                 )

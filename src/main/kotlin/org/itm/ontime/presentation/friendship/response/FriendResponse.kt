@@ -13,4 +13,8 @@ data class FriendResponse(
 
     @Schema(description = "Friend's name", example = "Saeyeon Lim")
     val name: String,
+
+    @Schema(description = "Friend's tardiness rate", example = "40")
+    val tardinessRate: Int
 )
+
