@@ -93,9 +93,9 @@ class FriendShipController(
     @PatchMapping("/accept")
     fun acceptFriendRequest(
         @RequestBody @Valid request: FriendshipAcceptRequest
-    ) : ResponseEntity<Unit> {
-        friendshipService.acceptFriendRequest(request)
-        return ResponseEntity.ok().build()
+    ) : ResponseEntity<UUID> {
+        val requestId = friendshipService.acceptFriendRequest(request)
+        return ResponseEntity.ok(requestId)
     }
 
     @Operation(
@@ -126,9 +126,9 @@ class FriendShipController(
     @PatchMapping("/reject")
     fun rejectFriendRequest(
         @RequestBody @Valid request: FriendshipAcceptRequest
-    ) : ResponseEntity<Unit> {
-        friendshipService.rejectFriendRequest(request)
-        return ResponseEntity.ok().build()
+    ) : ResponseEntity<UUID> {
+        val requestId = friendshipService.rejectFriendRequest(request)
+        return ResponseEntity.ok(requestId)
     }
 
     @Operation(

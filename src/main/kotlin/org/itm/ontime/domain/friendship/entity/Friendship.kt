@@ -19,6 +19,6 @@ class Friendship(
     var receiver : User,
 
     @Enumerated(EnumType.STRING)
-    var status : FriendshipStatus,
+    var status : FriendshipStatus = FriendshipStatus.PENDING,
 ) : BaseEntity() {
 }

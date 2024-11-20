@@ -38,12 +38,10 @@ class FriendshipService (
 
         val friendship = Friendship(
             requester = requester,
-            receiver = receiver,
-            FriendshipStatus.PENDING
+            receiver = receiver
         )
 
         friendshipRepository.save(friendship)
-
         return friendship.id
     }
 
