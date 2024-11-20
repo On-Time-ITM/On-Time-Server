@@ -60,9 +60,9 @@ class FriendShipController(
     @PostMapping
     fun sendFriendRequest(
         @RequestBody @Valid request: FriendshipRequest
-    ) : ResponseEntity<Unit> {
-        friendshipService.sendFriendRequest(request)
-        return ResponseEntity.ok().build()
+    ) : ResponseEntity<UUID> {
+        val requestId = friendshipService.sendFriendRequest(request)
+        return ResponseEntity.ok(requestId)
     }
 
     @Operation(
