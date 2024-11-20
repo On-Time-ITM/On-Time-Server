@@ -2,9 +2,11 @@ package org.itm.ontime.presentation.friendship
 
 import org.itm.ontime.application.friendship.service.FriendshipService
 import org.itm.ontime.presentation.friendship.request.FriendshipAcceptRequest
+import org.itm.ontime.presentation.friendship.request.FriendshipDeleteRequest
 import org.itm.ontime.presentation.friendship.request.FriendshipRequest
 import org.itm.ontime.presentation.friendship.response.FriendResponse
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -43,6 +45,13 @@ class FriendShipController(
         return ResponseEntity.ok().build()
     }
 
+    @DeleteMapping("/{userId}")
+    fun deleteFriend(
+        @RequestBody request: FriendshipDeleteRequest
+    ) : ResponseEntity<Unit> {
+        friendshipService.deleteFriend(request)
+        return ResponseEntity.noContent().build()
+    }
     @GetMapping("/{userId}")
     fun getFriendList(
         @PathVariable userId: UUID

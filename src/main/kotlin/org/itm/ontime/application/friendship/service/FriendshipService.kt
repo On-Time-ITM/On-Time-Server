@@ -9,6 +9,7 @@ import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.domain.user.repository.UserRepository
 import org.itm.ontime.global.error.ErrorCode
 import org.itm.ontime.presentation.friendship.request.FriendshipAcceptRequest
+import org.itm.ontime.presentation.friendship.request.FriendshipDeleteRequest
 import org.itm.ontime.presentation.friendship.request.FriendshipRequest
 import org.itm.ontime.presentation.friendship.response.FriendResponse
 import org.springframework.stereotype.Service
@@ -65,7 +66,7 @@ class FriendshipService (
 
     private fun validateFriendship(request: FriendshipAcceptRequest): Friendship {
         val friendship = friendshipRepository.findById(request.friendshipId)
-            .orElseThrow { FriendshipNotFoundException(request.friendshipId) }
+            .orElseThrow { FriendshipNotFoundException.fromId(request.friendshipId) }
 
         if (friendship.id != request.receiverId) {
             throw UnauthorizedFriendshipException(request.receiverId, friendship.id)
@@ -75,6 +76,25 @@ class FriendshipService (
             throw InvalidFriendshipStatusException(friendship.id, request.receiverId)
         }
         return friendship
+    }
+
+    fun deleteFriend(request: FriendshipDeleteRequest) {
+        if (request.userId == request.friendId) {
+            throw SelfFriendRequestException(request.userId)
+        }
+
+        val friendship = friendshipRepository.findByUsers(request.userId, request.friendId)
+            ?: throw FriendshipNotFoundException.fromUserIds(request.userId, request.friendId)
+
+        if (friendship.status != FriendshipStatus.ACCEPTED) {
+            throw InvalidFriendshipStatusException(friendship.id, request.userId)
+        }
+
+        if (friendship.requester.id != request.userId && friendship.receiver.id != request.userId) { // TODO : umm....
+            throw UnauthorizedFriendshipException(request.userId, friendship.id)
+        }
+
+        friendshipRepository.delete(friendship)
     }
 
     fun getFriendList(userId: UUID) : List<FriendResponse> {

@@ -15,4 +15,10 @@ interface FriendshipRepository : JpaRepository<Friendship, UUID>{
         AND (f.requester.id = :userId OR f.receiver.id = :userId)
     """)
     fun findAllAcceptedFriendships(userId: UUID): List<Friendship>
+    @Query("""
+        SELECT f FROM Friendship f 
+        WHERE (f.requester.id = :userId1 AND f.receiver.id = :userId2)
+        OR (f.requester.id = :userId2 AND f.receiver.id = :userId1)
+    """)
+    fun findByUsers(userId: UUID, friendId: UUID): Friendship?
 }
