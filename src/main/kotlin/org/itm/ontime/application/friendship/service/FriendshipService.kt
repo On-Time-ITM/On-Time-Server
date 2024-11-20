@@ -1,6 +1,5 @@
 package org.itm.ontime.application.friendship.service
 
-import jakarta.persistence.Id
 import org.itm.ontime.application.friendship.exception.*
 import org.itm.ontime.application.user.exception.UserNotFoundException
 import org.itm.ontime.domain.friendship.entity.Friendship
@@ -11,6 +10,7 @@ import org.itm.ontime.domain.user.repository.UserRepository
 import org.itm.ontime.global.error.ErrorCode
 import org.itm.ontime.presentation.friendship.request.FriendshipAcceptRequest
 import org.itm.ontime.presentation.friendship.request.FriendshipRequest
+import org.itm.ontime.presentation.friendship.response.FriendResponse
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -77,18 +77,26 @@ class FriendshipService (
         return friendship
     }
 
-//    fun getFriendList(userId: UUID) : List<Friendship> {
-//        val user = userRepository.findById(userId)
-//            .orElseThrow{ UserNotFoundException.fromId(userId) }
-//
-//        return friendshipRepository.findByReceiverAndStatus(user, FriendshipStatus.ACCEPTED)
-//            .map { friendship ->
-//                if (friendship.requester.id == userId) friendship.receiver else friendship.requester
-//                // TODO : 로직 재검토
-//            }
-//    }
-//
-//    fun  getReceivedFriendRequests(userId: UUID): List
+    fun getFriendList(userId: UUID) : List<FriendResponse> {
+        val user = userRepository.findById(userId)
+            .orElseThrow { UserNotFoundException.fromId(userId) }
 
+        return friendshipRepository.findAllAcceptedFriendships(userId)
+            .map { friendship ->
+                val friend = if (friendship.requester.id == userId) {
+                    friendship.receiver
+                } else {
+                    friendship.requester
+                }
+
+                FriendResponse(
+                    id = friend.id,
+                    phoneNumber = friend.phoneNumber,
+                    name = friend.name
+                )
+            }
+    }
+
+//    fun  getReceivedFriendRequests(userId: UUID): List
 
 }

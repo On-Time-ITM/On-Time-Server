@@ -12,16 +12,14 @@ import org.itm.ontime.global.common.BaseEntity
 @Entity
 @Table(name = "users")
 class User(
-    @Column(nullable = false, unique = true)
-    private val phoneNumber: String,
+    @Column(nullable = false, unique = true) val phoneNumber: String,
 
     @Column(nullable = true)
     private val kakaoId: String? = null,
 
     @Column(nullable = false) var password: String,
 
-    @Column(nullable = false)
-    private var name: String,
+    @Column(nullable = false) var name: String,
 
     @OneToMany(mappedBy = "requester")
     val sentFriendRequests: MutableList<Friendship> = mutableListOf(),

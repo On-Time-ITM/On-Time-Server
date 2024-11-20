@@ -1,3 +1,8 @@
 package org.itm.ontime.presentation.friendship.request
 
-data class FriendshipAcceptRequest()
+import java.util.UUID
+
+data class FriendshipAcceptRequest(
+    val friendshipId: UUID,
+    val receiverId: UUID
+)

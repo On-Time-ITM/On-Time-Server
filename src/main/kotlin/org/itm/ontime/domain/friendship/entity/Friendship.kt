@@ -2,6 +2,7 @@ package org.itm.ontime.domain.friendship.entity
 
 import jakarta.persistence.*
 import lombok.Getter
+import lombok.RequiredArgsConstructor
 import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.global.common.BaseEntity
 
@@ -11,13 +12,13 @@ import org.itm.ontime.global.common.BaseEntity
 class Friendship(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
-    private var requester : User,
+    var requester : User,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
-    private var receiver : User,
+    var receiver : User,
 
     @Enumerated(EnumType.STRING)
-    private var status : FriendshipStatus,
+    var status : FriendshipStatus,
 ) : BaseEntity() {
 }

@@ -43,7 +43,7 @@ class AuthService(
     @Transactional
     fun login(request: LoginRequest) : TokenResponse {
         val user = userRepository.findByPhoneNumber(request.phoneNumber)
-            ?: throw UserNotFoundException(request.phoneNumber)
+            ?: throw UserNotFoundException.fromPhoneNumber(request.phoneNumber)
 
         if (!passwordEncoder.matches(request.password, user.password)) {
             throw InvalidPasswordException()
