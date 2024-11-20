@@ -9,12 +9,15 @@ import java.util.UUID
 
 interface FriendshipRepository : JpaRepository<Friendship, UUID>{
     fun findByRequesterAndReceiver(requester: User, receiver: User): Friendship?
+    fun findByReceiverAndStatus(receiver: User, status: FriendshipStatus): List<Friendship>
+
     @Query("""
         SELECT f FROM Friendship f 
         WHERE f.status = 'ACCEPTED' 
         AND (f.requester.id = :userId OR f.receiver.id = :userId)
     """)
     fun findAllAcceptedFriendships(userId: UUID): List<Friendship>
+
     @Query("""
         SELECT f FROM Friendship f 
         WHERE (f.requester.id = :userId1 AND f.receiver.id = :userId2)

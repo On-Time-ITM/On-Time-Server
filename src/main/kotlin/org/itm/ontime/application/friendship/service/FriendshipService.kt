@@ -11,6 +11,7 @@ import org.itm.ontime.global.error.ErrorCode
 import org.itm.ontime.presentation.friendship.request.FriendshipAcceptRequest
 import org.itm.ontime.presentation.friendship.request.FriendshipDeleteRequest
 import org.itm.ontime.presentation.friendship.request.FriendshipRequest
+import org.itm.ontime.presentation.friendship.response.FriendRequestResponse
 import org.itm.ontime.presentation.friendship.response.FriendResponse
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -90,7 +91,7 @@ class FriendshipService (
             throw InvalidFriendshipStatusException(friendship.id, request.userId)
         }
 
-        if (friendship.requester.id != request.userId && friendship.receiver.id != request.userId) { // TODO : umm....
+        if (friendship.requester.id != request.userId && friendship.receiver.id != request.userId) { // TODO : 아악
             throw UnauthorizedFriendshipException(request.userId, friendship.id)
         }
 
@@ -102,7 +103,7 @@ class FriendshipService (
             .orElseThrow { UserNotFoundException.fromId(userId) }
 
         return friendshipRepository.findAllAcceptedFriendships(userId)
-            .map { friendship ->
+            .map { friendship -> // TODO : 아악
                 val friend = if (friendship.requester.id == userId) {
                     friendship.receiver
                 } else {
@@ -117,6 +118,21 @@ class FriendshipService (
             }
     }
 
-//    fun  getReceivedFriendRequests(userId: UUID): List
+    fun  getReceivedFriendRequests(userId: UUID): List<FriendRequestResponse> {
+        val receiver = userRepository.findById(userId)
+            .orElseThrow { UserNotFoundException.fromId(userId) }
 
+        return friendshipRepository.findByReceiverAndStatus(receiver, FriendshipStatus.PENDING)
+            .map { friendship -> // TODO : 아악
+                FriendRequestResponse(
+                    friendshipId = friendship.id,
+                    requester = FriendResponse(
+                        id = friendship.requester.id,
+                        phoneNumber = friendship.requester.phoneNumber,
+                        name = friendship.requester.name
+                    ),
+                    createdAt = friendship.createdDate
+                )
+            }
+    }
 }
