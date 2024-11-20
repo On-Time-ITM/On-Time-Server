@@ -59,7 +59,9 @@ class FriendshipService (
     fun rejectFriendRequest(request: FriendshipAcceptRequest) : UUID {
         val friendship = validateFriendship(request)
 
-        friendshipRepository.delete(friendship)
+        friendship.status = FriendshipStatus.REJECTED
+        friendshipRepository.save(friendship)
+
         return friendship.id
     }
 
