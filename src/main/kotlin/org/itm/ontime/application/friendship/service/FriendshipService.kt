@@ -50,7 +50,6 @@ class FriendshipService (
 
         friendship.status = FriendshipStatus.ACCEPTED
         friendshipRepository.save(friendship)
-
         return friendship.id
     }
 
@@ -87,7 +86,7 @@ class FriendshipService (
             throw InvalidFriendshipStatusException(friendship.id, request.userId)
         }
 
-        if (friendship.requester.id != request.userId && friendship.receiver.id != request.userId) { // TODO : 아악
+        if (friendship.requester.id != request.userId && friendship.receiver.id != request.userId) {
             throw UnauthorizedFriendshipException(request.userId, friendship.id)
         }
 
@@ -99,7 +98,7 @@ class FriendshipService (
             .orElseThrow { UserNotFoundException.fromId(userId) }
 
         return friendshipRepository.findAllAcceptedFriendships(user)
-            .map { friendship -> // TODO : 아악
+            .map { friendship ->
                 val friend = if (friendship.requester.id == userId) {
                     friendship.receiver
                 } else {
@@ -114,12 +113,12 @@ class FriendshipService (
             }
     }
 
-    fun  getReceivedFriendRequests(userId: UUID): List<FriendRequestResponse> {
+    fun getReceivedFriendRequests(userId: UUID): List<FriendRequestResponse> {
         val receiver = userRepository.findById(userId)
             .orElseThrow { UserNotFoundException.fromId(userId) }
 
         return friendshipRepository.findByReceiverAndStatus(receiver, FriendshipStatus.PENDING)
-            .map { friendship -> // TODO : 아악
+            .map { friendship ->
                 FriendRequestResponse(
                     friendshipId = friendship.id,
                     requester = FriendResponse(
