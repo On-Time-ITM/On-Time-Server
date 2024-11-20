@@ -20,8 +20,8 @@ interface FriendshipRepository : JpaRepository<Friendship, UUID>{
 
     @Query("""
         SELECT f FROM Friendship f 
-        WHERE (f.requester.id = :userId1 AND f.receiver.id = :userId2)
-        OR (f.requester.id = :userId2 AND f.receiver.id = :userId1)
+        WHERE (f.requester.id = :userId AND f.receiver.id = :friendId)
+        OR (f.requester.id = :friendId AND f.receiver.id = :userId)
     """)
     fun findByUsers(userId: UUID, friendId: UUID): Friendship?
 }
