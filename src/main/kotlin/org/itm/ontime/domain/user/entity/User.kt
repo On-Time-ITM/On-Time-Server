@@ -28,7 +28,7 @@ class User(
     val receivedFriendRequests: MutableList<Friendship> = mutableListOf(),
 
     @Column(nullable = false)
-    var tardinessRate: Int
+    var tardinessRate: Int = 0
     ) : BaseEntity() {
 
 //    @OneToMany(mappedBy = "user")
