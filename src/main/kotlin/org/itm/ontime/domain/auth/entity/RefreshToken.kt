@@ -9,9 +9,17 @@ import java.util.UUID
 
 @Entity
 @Getter
-@Table(name = "refresh_tokens")
+@Table(
+    name = "refresh_tokens",
+    uniqueConstraints = [
+        UniqueConstraint(
+            name = "uk_refresh_tokens_user_id",
+            columnNames = ["user_id"]
+        )
+    ]
+)
 class RefreshToken(
-    @Column(nullable = false)
+    @Column(name = "user_id", nullable = false)
     var userId: UUID,
 
     @Column(nullable = false)

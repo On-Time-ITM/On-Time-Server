@@ -31,10 +31,4 @@ class User(
     var tardinessRate: Int = 0
     ) : BaseEntity() {
 
-//    @OneToMany(mappedBy = "user")
-//    private val teamMemberships: MutableList<TeamMember> = mutableListOf()
-//
-//    @OneToMany(mappedBy = "user")
-//    private val attendances: MutableList<Attendance> = mutableListOf()
-
 }
