@@ -21,4 +21,7 @@ class Friendship(
     @Enumerated(EnumType.STRING)
     var status : FriendshipStatus = FriendshipStatus.PENDING,
 ) : BaseEntity() {
+    fun accept() {
+        this.status = FriendshipStatus.ACCEPTED
+    }
 }

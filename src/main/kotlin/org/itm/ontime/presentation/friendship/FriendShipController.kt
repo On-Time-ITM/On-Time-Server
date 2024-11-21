@@ -1,5 +1,6 @@
 package org.itm.ontime.presentation.friendship
 
+import ErrorResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
@@ -15,6 +16,8 @@ import org.itm.ontime.presentation.friendship.request.FriendshipDeleteRequest
 import org.itm.ontime.presentation.friendship.request.FriendshipRequest
 import org.itm.ontime.presentation.friendship.response.FriendRequestResponse
 import org.itm.ontime.presentation.friendship.response.FriendResponse
+import org.itm.ontime.presentation.user.request.UserSearchRequest
+import org.itm.ontime.presentation.user.response.UserSearchResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -32,6 +35,44 @@ import java.util.UUID
 class FriendShipController(
     private val friendshipService: FriendshipService
 ) {
+    @Operation(
+        summary = "Search user",
+        description = "Search a user before sending a friend request"
+    )
+    @ApiResponses(value = [
+        ApiResponse(
+            responseCode = "200",
+            description = "User found successfully",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = UserSearchResponse::class)
+            )]
+        ),
+        ApiResponse(
+            responseCode = "404",
+            description = "User not found with given phone number",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ErrorResponse::class)
+            )]
+        ),
+        ApiResponse(
+            responseCode = "400",
+            description = "Invalid phone number format",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ErrorResponse::class)
+            )]
+        )
+    ])
+    @GetMapping("/search")
+    fun searchFriend(
+        @RequestBody @Valid request: UserSearchRequest
+    ) : ResponseEntity<UserSearchResponse> {
+        val response = friendshipService.searchByPhoneNumber(request)
+        return ResponseEntity.ok(response)
+    }
+
     @Operation(
         summary = "Send friend request",
         description = "Send a friend request to another user"

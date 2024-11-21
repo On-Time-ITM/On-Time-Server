@@ -24,4 +24,10 @@ interface FriendshipRepository : JpaRepository<Friendship, UUID>{
         OR (f.requester.id = :friendId AND f.receiver.id = :userId)
     """)
     fun findByUsers(userId: UUID, friendId: UUID): Friendship?
+
+    fun existsByStatusAndRequesterIdAndReceiverId(
+        status: FriendshipStatus,
+        requesterId: UUID,
+        receiverId: UUID
+    ): Boolean
 }
