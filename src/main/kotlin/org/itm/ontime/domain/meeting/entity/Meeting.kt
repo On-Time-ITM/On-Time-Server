@@ -2,8 +2,8 @@ package org.itm.ontime.domain.meeting.entity
 
 import jakarta.persistence.*
 import org.itm.ontime.domain.attendance.entity.Attendance
-import org.itm.ontime.domain.location.entity.Location
-import org.itm.ontime.global.common.BaseEntity
+import org.itm.ontime.domain.common.Location
+import org.itm.ontime.global.entity.BaseEntity
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
