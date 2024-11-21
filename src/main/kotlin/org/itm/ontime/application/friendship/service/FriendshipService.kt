@@ -84,7 +84,7 @@ class FriendshipService (
         val friendship = friendshipRepository.findById(request.friendshipId)
             .orElseThrow { FriendshipNotFoundException.fromId(request.friendshipId) }
 
-        if (friendship.id != request.receiverId) {
+        if (friendship.receiver.id != request.receiverId) {
             throw UnauthorizedFriendshipException(request.receiverId, friendship.id)
         }
 
