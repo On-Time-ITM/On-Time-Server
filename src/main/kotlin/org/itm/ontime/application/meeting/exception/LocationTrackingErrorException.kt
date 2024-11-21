@@ -5,10 +5,10 @@ import org.itm.ontime.global.error.BusinessException
 import java.util.*
 
 @Schema(description = "Exception thrown when location tracking fails")
-class LocationTrackingException(
+class LocationTrackingErrorException(
     @Schema(description = "Error message", example = "GPS signal not found")
-    private val errorMessage: String
+    private val userId: UUID
 ) : BusinessException(
     MeetingErrorCode.LOCATION_TRACKING_ERROR,
-    "Failed to track location: $errorMessage"
+    "Failed to track location of user $userId"
 )
