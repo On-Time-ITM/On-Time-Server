@@ -1,6 +1,7 @@
 package org.itm.ontime.global.error
 
 import ErrorResponse
+import org.itm.ontime.application.auth.exception.common.AuthErrorCode
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.HttpRequestMethodNotSupportedException
@@ -60,8 +61,8 @@ class GlobalExceptionHandler {
         log.error("handleAccessDeniedException", exception)
 
         return ResponseEntity
-            .status(CommonErrorCode.UNAUTHORIZED.status)
-            .body(ErrorResponse.of(CommonErrorCode.UNAUTHORIZED))
+            .status(AuthErrorCode.UNAUTHORIZED.status)
+            .body(ErrorResponse.of(AuthErrorCode.UNAUTHORIZED))
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException::class)

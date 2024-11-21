@@ -1,5 +1,6 @@
 import io.swagger.v3.oas.annotations.media.Schema
 import org.itm.ontime.global.error.CommonErrorCode
+import org.itm.ontime.global.error.ErrorCode
 import org.springframework.http.HttpStatus
 
 @Schema(description = "Error Response")
@@ -29,7 +30,7 @@ data class ErrorResponse(
     )
 
     companion object {
-        fun of(errorCode: CommonErrorCode): ErrorResponse {
+        fun of(errorCode: ErrorCode): ErrorResponse {
             return ErrorResponse(
                 code = errorCode.code,
                 message = errorCode.message,

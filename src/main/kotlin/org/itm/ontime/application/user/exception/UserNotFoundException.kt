@@ -9,7 +9,7 @@ import java.util.UUID
 class UserNotFoundException private constructor(
     errorMessage: String
 ) : BusinessException(
-    CommonErrorCode.USER_NOT_FOUND,
+    UserErrorCode.USER_NOT_FOUND,
     errorMessage
 ) {
     companion object {
