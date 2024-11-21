@@ -13,6 +13,8 @@ import org.itm.ontime.presentation.friendship.request.FriendshipDeleteRequest
 import org.itm.ontime.presentation.friendship.request.FriendshipRequest
 import org.itm.ontime.presentation.friendship.response.FriendRequestResponse
 import org.itm.ontime.presentation.friendship.response.FriendResponse
+import org.itm.ontime.presentation.user.request.UserSearchRequest
+import org.itm.ontime.presentation.user.response.UserSearchResponse
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -21,6 +23,17 @@ class FriendshipService (
     private val userRepository: UserRepository,
     private val friendshipRepository: FriendshipRepository
 ){
+    fun searchByPhoneNumber(request: UserSearchRequest) : UserSearchResponse {
+        val user = userRepository.findByPhoneNumber(request.phoneNumber)
+            ?: throw UserNotFoundException.fromPhoneNumber(request.phoneNumber)
+
+        return UserSearchResponse(
+            id = user.id,
+            name = user.name,
+            phoneNumber = user.phoneNumber
+        )
+    }
+
     fun sendFriendRequest(request: FriendshipRequest) : UUID {
         val requester = userRepository.findById(request.requesterId)
             .orElseThrow{ UserNotFoundException.fromId(request.requesterId) }
@@ -32,7 +45,11 @@ class FriendshipService (
             throw SelfFriendRequestException(request.requesterId)
         }
 
-        if (friendshipRepository.findByRequesterAndReceiver(requester, receiver) != null) {
+        if (isAlready(FriendshipStatus.ACCEPTED, requester.id, receiver.id)) {
+            throw AlreadyFriendsException(requester.id, receiver.id)
+        }
+
+        if (isAlready(FriendshipStatus.PENDING, requester.id, receiver.id)) {
             throw DuplicateFriendRequestException(requester.id, receiver.id)
         }
 
@@ -43,6 +60,11 @@ class FriendshipService (
 
         friendshipRepository.save(friendship)
         return friendship.id
+    }
+
+    fun isAlready(status: FriendshipStatus, requesterId: UUID, receiverId: UUID) : Boolean {
+        return friendshipRepository.existsByStatusAndRequesterIdAndReceiverId(status, requesterId, receiverId)
+                || friendshipRepository.existsByStatusAndRequesterIdAndReceiverId(status, receiverId, requesterId)
     }
 
     fun acceptFriendRequest(request: FriendshipAcceptRequest) : UUID {
