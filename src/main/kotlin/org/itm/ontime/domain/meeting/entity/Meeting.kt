@@ -3,6 +3,7 @@ package org.itm.ontime.domain.meeting.entity
 import jakarta.persistence.*
 import org.itm.ontime.domain.attendance.entity.Attendance
 import org.itm.ontime.domain.common.Location
+import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.global.entity.BaseEntity
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -12,22 +13,29 @@ import java.time.LocalDateTime
 class Meeting(
 
     @Column(nullable = false)
-    private val name: String,
+    val name: String,
 
     @Column(nullable = false)
-    private val meetingDateTime: LocalDateTime,
+    val meetingDateTime: LocalDateTime,
 
     @Column(nullable = false)
-    private val location: Location,
+    val location: Location,
 
     @Column(nullable = false)
-    private val lateFee: BigDecimal,
+    val lateFee: BigDecimal,
 
     @Column(nullable = false)
-    private val bankAccount: String,
+    val bankAccount: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "host_id", nullable = false)
+    val host: User,
 
     @OneToMany(mappedBy = "meeting")
-    private val attendances: MutableList<Attendance> = mutableListOf()
+    val participants: MutableList<MeetingParticipant> = mutableListOf(),
+
+    @OneToMany(mappedBy = "meeting")
+    val attendances: MutableList<Attendance> = mutableListOf()
 
 ) : BaseEntity() {
 
