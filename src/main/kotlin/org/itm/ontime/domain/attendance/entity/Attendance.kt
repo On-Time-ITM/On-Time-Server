@@ -1,7 +1,7 @@
 package org.itm.ontime.domain.attendance.entity
 
 import jakarta.persistence.*
-import org.itm.ontime.domain.PrimaryKeyEntity
+import org.itm.ontime.global.entity.PrimaryKeyEntity
 import org.itm.ontime.domain.meeting.entity.Meeting
 import org.itm.ontime.domain.payment.entity.PaymentStatus
 import org.itm.ontime.domain.user.entity.User

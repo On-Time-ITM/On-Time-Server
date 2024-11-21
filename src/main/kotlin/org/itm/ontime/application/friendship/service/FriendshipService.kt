@@ -5,9 +5,7 @@ import org.itm.ontime.application.user.exception.UserNotFoundException
 import org.itm.ontime.domain.friendship.entity.Friendship
 import org.itm.ontime.domain.friendship.entity.FriendshipStatus
 import org.itm.ontime.domain.friendship.repository.FriendshipRepository
-import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.domain.user.repository.UserRepository
-import org.itm.ontime.global.error.ErrorCode
 import org.itm.ontime.presentation.friendship.request.FriendshipAcceptRequest
 import org.itm.ontime.presentation.friendship.request.FriendshipDeleteRequest
 import org.itm.ontime.presentation.friendship.request.FriendshipRequest

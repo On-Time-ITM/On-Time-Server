@@ -2,8 +2,7 @@ package org.itm.ontime.domain.auth.entity
 
 import jakarta.persistence.*
 import lombok.Getter
-import org.itm.ontime.domain.user.entity.User
-import org.itm.ontime.global.common.BaseEntity
+import org.itm.ontime.global.entity.BaseEntity
 import java.time.LocalDateTime
 import java.util.UUID
 

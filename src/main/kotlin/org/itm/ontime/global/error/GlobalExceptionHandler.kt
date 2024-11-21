@@ -36,8 +36,8 @@ class GlobalExceptionHandler {
 
         val bindingResult = exception.bindingResult
             ?: return ResponseEntity
-                .status(ErrorCode.INVALID_INPUT_VALUE.status)
-                .body(ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE))
+                .status(CommonErrorCode.INVALID_INPUT_VALUE.status)
+                .body(ErrorResponse.of(CommonErrorCode.INVALID_INPUT_VALUE))
 
         val errors = bindingResult.fieldErrors.map { fieldError ->
             ErrorResponse.FieldError(
@@ -48,8 +48,8 @@ class GlobalExceptionHandler {
         }
 
         return ResponseEntity
-            .status(ErrorCode.INVALID_INPUT_VALUE.status)
-            .body(ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, errors))
+            .status(CommonErrorCode.INVALID_INPUT_VALUE.status)
+            .body(ErrorResponse.of(CommonErrorCode.INVALID_INPUT_VALUE, errors))
     }
 
     @ExceptionHandler(AccessDeniedException::class)
@@ -60,8 +60,8 @@ class GlobalExceptionHandler {
         log.error("handleAccessDeniedException", exception)
 
         return ResponseEntity
-            .status(ErrorCode.UNAUTHORIZED.status)
-            .body(ErrorResponse.of(ErrorCode.UNAUTHORIZED))
+            .status(CommonErrorCode.UNAUTHORIZED.status)
+            .body(ErrorResponse.of(CommonErrorCode.UNAUTHORIZED))
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
@@ -72,8 +72,8 @@ class GlobalExceptionHandler {
         log.error("handleHttpRequestMethodNotSupportedException", exception)
 
         return ResponseEntity
-            .status(ErrorCode.METHOD_NOT_ALLOWED.status)
-            .body(ErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED))
+            .status(CommonErrorCode.METHOD_NOT_ALLOWED.status)
+            .body(ErrorResponse.of(CommonErrorCode.METHOD_NOT_ALLOWED))
     }
 
     @ExceptionHandler(Exception::class)
@@ -84,8 +84,8 @@ class GlobalExceptionHandler {
         log.error("handleException", exception)
 
         return ResponseEntity
-            .status(ErrorCode.INTERNAL_SERVER_ERROR.status)
-            .body(ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR))
+            .status(CommonErrorCode.INTERNAL_SERVER_ERROR.status)
+            .body(ErrorResponse.of(CommonErrorCode.INTERNAL_SERVER_ERROR))
     }
 
 }

@@ -1,4 +1,4 @@
-package org.itm.ontime.domain
+package org.itm.ontime.global.entity
 
 import com.github.f4b6a3.ulid.UlidCreator
 import jakarta.persistence.Column

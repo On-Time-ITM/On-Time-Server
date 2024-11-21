@@ -2,14 +2,14 @@ package org.itm.ontime.application.friendship.exception
 
 import io.swagger.v3.oas.annotations.media.Schema
 import org.itm.ontime.global.error.BusinessException
-import org.itm.ontime.global.error.ErrorCode
+import org.itm.ontime.global.error.CommonErrorCode
 import java.util.UUID
 
 @Schema(description = "Exception thrown when a friendship relationship cannot be found")
 class FriendshipNotFoundException private constructor(
     message: String
 ) : BusinessException(
-    ErrorCode.FRIENDSHIP_NOT_FOUND,
+    FriendshipErrorCode.FRIENDSHIP_NOT_FOUND,
     message
 ) {
     companion object {

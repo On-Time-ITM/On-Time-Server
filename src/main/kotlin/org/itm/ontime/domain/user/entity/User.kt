@@ -6,7 +6,7 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import lombok.Getter
 import org.itm.ontime.domain.friendship.entity.Friendship
-import org.itm.ontime.global.common.BaseEntity
+import org.itm.ontime.global.entity.BaseEntity
 
 @Getter
 @Entity

@@ -2,14 +2,14 @@ package org.itm.ontime.application.user.exception
 
 import io.swagger.v3.oas.annotations.media.Schema
 import org.itm.ontime.global.error.BusinessException
-import org.itm.ontime.global.error.ErrorCode
+import org.itm.ontime.global.error.CommonErrorCode
 import java.util.UUID
 
 @Schema(description = "Exception thrown when a user cannot be found")
 class UserNotFoundException private constructor(
     errorMessage: String
 ) : BusinessException(
-    ErrorCode.USER_NOT_FOUND,
+    CommonErrorCode.USER_NOT_FOUND,
     errorMessage
 ) {
     companion object {

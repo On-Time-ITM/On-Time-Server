@@ -59,8 +59,10 @@ class AuthService(
     @Transactional
     fun createTokens(userId: UUID) : TokenResponse {
 
-        refreshTokenRepository.findByUserId(userId).let { existingToken ->
-            refreshTokenRepository.deleteById(existingToken.id)
+        val existingToken = refreshTokenRepository.findByUserId(userId).orElse(null)
+
+        existingToken?.let {
+            refreshTokenRepository.deleteById(it.id)
             refreshTokenRepository.flush() // TODO : flush 성능 문제..
         }
 
