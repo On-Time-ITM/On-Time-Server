@@ -25,15 +25,15 @@ class FriendshipService (
         val requester = userRepository.findById(request.requesterId)
             .orElseThrow{ UserNotFoundException.fromId(request.requesterId) }
 
-        val receiver = userRepository.findById(request.receiverId)
-            .orElseThrow{ UserNotFoundException.fromId(request.receiverId) }
+        val receiver = userRepository.findByPhoneNumber(request.receiverPhoneNumber)
+            ?: throw UserNotFoundException.fromPhoneNumber(request.receiverPhoneNumber)
 
-        if (request.requesterId == request.receiverId) {
+        if (requester.id == receiver.id) {
             throw SelfFriendRequestException(request.requesterId)
         }
 
         if (friendshipRepository.findByRequesterAndReceiver(requester, receiver) != null) {
-            throw DuplicateFriendRequestException(request.requesterId, request.receiverId)
+            throw DuplicateFriendRequestException(requester.id, receiver.id)
         }
 
         val friendship = Friendship(
@@ -48,7 +48,7 @@ class FriendshipService (
     fun acceptFriendRequest(request: FriendshipAcceptRequest) : UUID {
         val friendship = validateFriendship(request)
 
-        friendship.status = FriendshipStatus.ACCEPTED
+        friendship.accept()
         friendshipRepository.save(friendship)
         return friendship.id
     }

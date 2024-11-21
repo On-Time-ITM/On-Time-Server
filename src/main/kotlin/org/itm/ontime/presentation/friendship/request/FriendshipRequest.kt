@@ -12,8 +12,8 @@ data class FriendshipRequest(
     val requesterId: UUID,
 
     @Schema(
-        description = "ID of the user receiving the friend request",
-        example = "987fcdeb-51d2-3456-bcde-789012345678"
+        description = "Phone number of the user receiving the friend request",
+        example = "010-1234-5678"
     )
-    val receiverId: UUID
+    val receiverPhoneNumber: String
 )
