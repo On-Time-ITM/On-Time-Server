@@ -18,6 +18,7 @@ data class FriendResponse(
     val tardinessRate: Int
 ) {
     companion object {
+        @JvmStatic
         fun of(
             id: UUID,
             phoneNumber: String,

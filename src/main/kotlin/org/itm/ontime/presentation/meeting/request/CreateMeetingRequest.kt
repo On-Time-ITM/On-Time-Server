@@ -1,43 +1,59 @@
 package org.itm.ontime.presentation.meeting.request
 
 import io.swagger.v3.oas.annotations.media.Schema
-import jakarta.validation.constraints.Future
-import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotEmpty
-import jakarta.validation.constraints.NotNull
-import jakarta.validation.constraints.Positive
+import jakarta.validation.constraints.*
 import org.itm.ontime.domain.common.Location
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
+@Schema(description = "Request to create a meeting")
 data class CreateMeetingRequest(
+    @Schema(
+        description = "Meeting name",
+        example = "Weekly Team Meeting"
+    )
     @field:NotBlank
-    @Schema(description = "Meeting name", example = "Weekly Team Meeting")
     val name: String,
 
+    @Schema(
+        description = "Meeting date and time",
+        example = "2024-12-25T15:00:00"
+    )
     @field:NotBlank
     @field:Future
-    @Schema(description = "Meeting date and time", example = "2024-12-25T15:00:00")
     val meetingDateTime: LocalDateTime,
 
-    @field:NotNull
     @Schema(description = "Meeting location")
+    @field:NotNull
     val location: Location,
 
+    @Schema(
+        description = "Late fee amount",
+        example = "5000"
+    )
     @field:NotNull
     @field:Positive
-    @Schema(description = "Late fee amount", example = "5000")
     val lateFee: BigDecimal,
 
+    @Schema(
+        description = "Bank account number",
+        example = "1234-5678"
+    )
     @field:NotBlank
-    @Schema(description = "Bank account number", example = "1234-5678")
     val bankAccount: String,
 
-    // TODO : Swagger schema
+    @Schema(
+        description = "Host's user ID",
+        example = "123e4567-e89b-12d3-a456-426614174000"
+    )
     @field:NotNull
     val hostId: UUID,
 
+    @Schema(
+        description = "Participant IDs",
+        example = "[\"123e4567-e89b-12d3-a456-426614174000\", \"987fcdeb-51d2-3456-bcde-789012345678\"]"
+    )
     @field:NotEmpty
     val participantIds: MutableList<UUID>
 )

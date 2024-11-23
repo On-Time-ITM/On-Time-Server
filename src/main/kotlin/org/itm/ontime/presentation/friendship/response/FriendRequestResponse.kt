@@ -16,6 +16,7 @@ data class FriendRequestResponse(
     val createdAt: LocalDateTime
 ) {
     companion object {
+        @JvmStatic
         fun of(
             friendshipId: UUID,
             requester: FriendResponse,

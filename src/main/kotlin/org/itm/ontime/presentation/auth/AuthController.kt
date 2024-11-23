@@ -33,7 +33,10 @@ class AuthController(
     private val authService: AuthService
 ) {
 
-    @Operation(summary = "Sign Up", description = "Register a new user with phone number")
+    @Operation(
+        summary = "Sign Up",
+        description = "Register a new user with phone number"
+    )
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Success"),
         ApiResponse(responseCode = "400", description = "Invalid input or duplicate phone number",
@@ -49,7 +52,10 @@ class AuthController(
         return ResponseEntity.ok(response)
     }
 
-    @Operation(summary = "Sign Up", description = "Login with phone number and password")
+    @Operation(
+        summary = "Sign Up",
+        description = "Login with phone number and password"
+    )
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Success"),
@@ -64,7 +70,10 @@ class AuthController(
         return ResponseEntity.ok(response)
     }
 
-    @Operation(summary = "Refresh token", description = "Get new access token using refresh token")
+    @Operation(
+        summary = "Refresh token",
+        description = "Get new access token using refresh token"
+    )
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Success"),
