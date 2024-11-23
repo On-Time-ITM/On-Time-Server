@@ -1,22 +1,23 @@
 package org.itm.ontime.application.auth.service
 
 import jakarta.transaction.Transactional
-import org.itm.ontime.domain.auth.entity.RefreshToken
 import org.itm.ontime.application.auth.exception.common.InvalidRefreshTokenException
-import org.itm.ontime.presentation.auth.response.TokenResponse
 import org.itm.ontime.application.auth.exception.local.DuplicationPhoneNumberException
 import org.itm.ontime.application.auth.exception.local.InvalidPasswordException
+import org.itm.ontime.application.user.exception.UserNotFoundException
+import org.itm.ontime.domain.auth.entity.RefreshToken
 import org.itm.ontime.domain.auth.repository.RefreshTokenRepository
 import org.itm.ontime.domain.user.entity.User
-import org.itm.ontime.application.user.exception.UserNotFoundException
 import org.itm.ontime.domain.user.repository.UserRepository
 import org.itm.ontime.infrastructure.security.jwt.JwtTokenProvider
 import org.itm.ontime.presentation.auth.request.LoginRequest
 import org.itm.ontime.presentation.auth.request.SignUpRequest
 import org.itm.ontime.presentation.auth.request.TokenRefreshRequest
+import org.itm.ontime.presentation.auth.response.LoginResponse
+import org.itm.ontime.presentation.auth.response.TokenResponse
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.util.*
 
 @Service
 class AuthService(
@@ -41,7 +42,7 @@ class AuthService(
     }
 
     @Transactional
-    fun login(request: LoginRequest) : TokenResponse {
+    fun login(request: LoginRequest) : LoginResponse {
         val user = userRepository.findByPhoneNumber(request.phoneNumber)
             ?: throw UserNotFoundException.fromPhoneNumber(request.phoneNumber)
 
@@ -49,7 +50,13 @@ class AuthService(
             throw InvalidPasswordException()
         }
 
-        return createTokens(user.id)
+        return LoginResponse.of(
+            tokenResponse = createTokens(user.id),
+            userId = user.id,
+            name = user.name,
+            phoneNumber = user.phoneNumber,
+            tardinessRate = user.tardinessRate
+        )
     }
 
     fun logout(userId: UUID) {
@@ -76,25 +83,23 @@ class AuthService(
             )
         )
 
-        return TokenResponse(
+        return TokenResponse.of(
             accessToken = accessToken,
             refreshToken = refreshToken,
             expiresIn = jwtTokenProvider.getAccessTokenValidityInSeconds(),
-            userId = userId
         )
     }
 
     @Transactional
     fun refreshToken(request: TokenRefreshRequest): TokenResponse {
         val refreshToken = refreshTokenRepository.findByToken(request.refreshToken)
-            ?: throw InvalidRefreshTokenException(request.refreshToken)
+            .orElseThrow { InvalidRefreshTokenException(request.refreshToken) }
 
         if (refreshToken.isExpired()) {
             refreshTokenRepository.delete(refreshToken)
             throw InvalidRefreshTokenException(request.refreshToken)
         }
 
-        return this.javaClass.getMethod("createTokens", UUID::class.java)
-            .invoke(this, refreshToken.userId) as TokenResponse
+        return createTokens(refreshToken.userId)
     }
 }

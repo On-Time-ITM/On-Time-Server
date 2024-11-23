@@ -7,14 +7,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.itm.ontime.application.auth.service.AuthService
 import org.itm.ontime.application.auth.exception.common.InvalidRefreshTokenException
 import org.itm.ontime.application.auth.exception.local.DuplicationPhoneNumberException
 import org.itm.ontime.application.auth.exception.local.InvalidPasswordException
+import org.itm.ontime.application.auth.service.AuthService
 import org.itm.ontime.infrastructure.security.CustomUserDetails
 import org.itm.ontime.presentation.auth.request.LoginRequest
 import org.itm.ontime.presentation.auth.request.SignUpRequest
 import org.itm.ontime.presentation.auth.request.TokenRefreshRequest
+import org.itm.ontime.presentation.auth.response.LoginResponse
 import org.itm.ontime.presentation.auth.response.TokenResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
+import java.util.*
 
 
 @RestController
@@ -58,7 +59,7 @@ class AuthController(
     @PostMapping("/login")
     fun login(
         @Valid @RequestBody request: LoginRequest
-    ): ResponseEntity<TokenResponse> {
+    ): ResponseEntity<LoginResponse> {
         val response = authService.login(request)
         return ResponseEntity.ok(response)
     }
