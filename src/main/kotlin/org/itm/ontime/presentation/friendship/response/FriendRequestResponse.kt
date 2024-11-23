@@ -14,5 +14,15 @@ data class FriendRequestResponse(
 
     @Schema(description = "When the friend request was created", example = "2024-01-01T12:00:00")
     val createdAt: LocalDateTime
-)
+) {
+    companion object {
+        fun of(
+            friendshipId: UUID,
+            requester: FriendResponse,
+            createdAt: LocalDateTime
+        ): FriendRequestResponse {
+            return FriendRequestResponse(friendshipId, requester, createdAt)
+        }
+    }
+}
 

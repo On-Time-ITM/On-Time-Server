@@ -1,7 +1,7 @@
 package org.itm.ontime.presentation.friendship.response
 
 import io.swagger.v3.oas.annotations.media.Schema
-import java.util.UUID
+import java.util.*
 
 @Schema(description = "Response DTO for friend information")
 data class FriendResponse(
@@ -16,5 +16,16 @@ data class FriendResponse(
 
     @Schema(description = "Friend's tardiness rate", example = "40")
     val tardinessRate: Int
-)
+) {
+    companion object {
+        fun of(
+            id: UUID,
+            phoneNumber: String,
+            name: String,
+            tardinessRate: Int
+        ): FriendResponse {
+            return FriendResponse(id, phoneNumber, name, tardinessRate)
+        }
+    }
+}
 

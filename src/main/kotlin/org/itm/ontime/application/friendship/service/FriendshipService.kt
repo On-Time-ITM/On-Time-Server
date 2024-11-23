@@ -14,7 +14,7 @@ import org.itm.ontime.presentation.friendship.response.FriendResponse
 import org.itm.ontime.presentation.user.request.UserSearchRequest
 import org.itm.ontime.presentation.user.response.UserSearchResponse
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.util.*
 
 @Service
 class FriendshipService (
@@ -25,7 +25,7 @@ class FriendshipService (
         val user = userRepository.findByPhoneNumber(request.phoneNumber)
             ?: throw UserNotFoundException.fromPhoneNumber(request.phoneNumber)
 
-        return UserSearchResponse(
+        return UserSearchResponse.of(
             id = user.id,
             name = user.name,
             phoneNumber = user.phoneNumber
@@ -94,7 +94,7 @@ class FriendshipService (
         return friendship
     }
 
-    fun deleteFriend(request: FriendshipDeleteRequest) {
+    fun deleteFriend(request: FriendshipDeleteRequest) : UUID {
         if (request.userId == request.friendId) {
             throw SelfFriendRequestException(request.userId)
         }
@@ -111,6 +111,7 @@ class FriendshipService (
         }
 
         friendshipRepository.delete(friendship)
+        return friendship.id
     }
 
     fun getFriendList(userId: UUID) : List<FriendResponse> {
@@ -125,11 +126,11 @@ class FriendshipService (
                     friendship.requester
                 }
 
-                FriendResponse(
-                    id = friend.id,
-                    phoneNumber = friend.phoneNumber,
-                    name = friend.name,
-                    tardinessRate = friend.tardinessRate
+                FriendResponse.of(
+                    friend.id,
+                    friend.phoneNumber,
+                    friend.name,
+                    friend.tardinessRate
                 )
             }
     }
@@ -140,9 +141,9 @@ class FriendshipService (
 
         return friendshipRepository.findByReceiverAndStatus(receiver, FriendshipStatus.PENDING)
             .map { friendship ->
-                FriendRequestResponse(
+                FriendRequestResponse.of(
                     friendshipId = friendship.id,
-                    requester = FriendResponse(
+                    requester = FriendResponse.of(
                         id = friendship.requester.id,
                         phoneNumber = friendship.requester.phoneNumber,
                         name = friendship.requester.name,

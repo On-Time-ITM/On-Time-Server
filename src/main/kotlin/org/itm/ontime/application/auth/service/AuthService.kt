@@ -38,7 +38,8 @@ class AuthService(
             name = request.name
         ))
 
-        return createTokens(user.id)
+        val tokenResponse = createTokens(user.id)
+        return tokenResponse
     }
 
     @Transactional
@@ -100,6 +101,7 @@ class AuthService(
             throw InvalidRefreshTokenException(request.refreshToken)
         }
 
-        return createTokens(refreshToken.userId)
+        val tokenResponse = createTokens(refreshToken.userId)
+        return tokenResponse
     }
 }
