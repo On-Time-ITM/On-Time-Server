@@ -14,6 +14,4 @@ enum class MeetingErrorCode(
     NOT_MEETING_HOST(HttpStatus.FORBIDDEN, "M003", "Not a host of this meeting"),
     ALREADY_CHECKED_ATTENDANCE(HttpStatus.BAD_REQUEST, "M004", "Already checked attendance"),
     INVALID_QR_CODE(HttpStatus.BAD_REQUEST, "M005", "Invalid QR code"),
-    LOCATION_TRACKING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "M006", "Failed to track location"),
-
 }

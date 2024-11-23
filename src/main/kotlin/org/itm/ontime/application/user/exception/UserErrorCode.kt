@@ -8,5 +8,6 @@ enum class UserErrorCode(
     override val code: String,
     override val message: String
 ) : ErrorCode {
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "A005", "User not found"),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "User not found"),
+    USER_LOCATION_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "U002", "User location not found"),
 }
