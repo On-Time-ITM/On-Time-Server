@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import org.itm.ontime.domain.attendance.entity.Attendance
 import org.itm.ontime.domain.common.Location
 import org.itm.ontime.domain.user.entity.User
+import org.itm.ontime.domain.user.entity.UserLocation
 import org.itm.ontime.global.entity.BaseEntity
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -33,6 +34,9 @@ class Meeting(
 
     @OneToMany(mappedBy = "meeting")
     val participants: MutableList<MeetingParticipant> = mutableListOf(),
+
+    @OneToMany(mappedBy = "meeting")
+    val userLocations : MutableList<UserLocation> = mutableListOf(),
 
     @OneToMany(mappedBy = "meeting")
     val attendances: MutableList<Attendance> = mutableListOf()
