@@ -12,7 +12,7 @@ import org.itm.ontime.presentation.meeting.request.CreateMeetingRequest
 import org.itm.ontime.presentation.meeting.request.DeleteMeetingRequest
 import org.itm.ontime.presentation.meeting.response.MeetingResponse
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.util.*
 
 @Service
 class MeetingService(
@@ -48,16 +48,16 @@ class MeetingService(
         }
 
         val meeting = Meeting(
-            name = request.name,
-            meetingDateTime = request.meetingDateTime,
-            location = request.location,
-            lateFee = request.lateFee,
-            bankAccount = request.bankAccount,
-            host = host
+            request.name,
+            request.meetingDateTime,
+            request.location,
+            request.lateFee,
+            request.accountInfo,
+            host
         )
 
         val participants = users.map { user ->
-            MeetingParticipant(meeting = meeting, user = user)
+            MeetingParticipant(meeting, user)
         }
 
         meeting.apply { this.participants.addAll(participants) }
@@ -69,13 +69,13 @@ class MeetingService(
             .orElseThrow { MeetingNotFoundException(request.meetingId) }
 
         val user = userRepository.findById(request.hostId)
-            .orElseThrow{ UserNotFoundException.fromId(request.hostId) }
+            .orElseThrow { UserNotFoundException.fromId(request.hostId) }
 
         if (meeting.host.id != user.id) {
             throw NotMeetingHostException(user.id, meeting.id)
         }
 
-        meetingRepository.deleteById(request.meetingId)
+        meetingRepository.deleteById(meeting.id)
         return meeting.id
     }
 }

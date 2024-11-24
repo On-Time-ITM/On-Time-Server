@@ -2,8 +2,9 @@ package org.itm.ontime.presentation.meeting.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
-import org.itm.ontime.domain.common.Location
+import org.itm.ontime.domain.location.entity.Location
 import org.itm.ontime.domain.meeting.entity.Meeting
+import org.itm.ontime.domain.payment.entity.AccountInfo
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
@@ -43,11 +44,11 @@ data class MeetingResponse(
     val lateFee: BigDecimal,
 
     @Schema(
-        description = "Bank account number",
-        example = "01234567890987"
+        description = "Bank account information",
+        example = "{\"accountNumber\": \"1234567890\", \"bankName\": \"Bank of America\"}"
     )
     @field:NotBlank
-    val bankAccount: String,
+    val accountInfo: AccountInfo
 
     // TODO : attendance
 
@@ -60,7 +61,7 @@ data class MeetingResponse(
             meeting.meetingDateTime,
             meeting.location,
             meeting.lateFee,
-            meeting.bankAccount
+            meeting.accountInfo,
         )
 
         fun of(meetings: List<Meeting>): List<MeetingResponse> =
