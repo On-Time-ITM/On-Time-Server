@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.hibernate.annotations.Parameter
 import org.itm.ontime.application.friendship.service.FriendshipService
 import org.itm.ontime.presentation.friendship.request.FriendshipAcceptRequest
 import org.itm.ontime.presentation.friendship.request.FriendshipDeleteRequest
@@ -19,15 +18,8 @@ import org.itm.ontime.presentation.friendship.response.FriendResponse
 import org.itm.ontime.presentation.user.request.UserSearchRequest
 import org.itm.ontime.presentation.user.response.UserSearchResponse
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/api/v1/friendship")
@@ -69,7 +61,7 @@ class FriendShipController(
     fun searchFriend(
         @RequestBody @Valid request: UserSearchRequest
     ) : ResponseEntity<UserSearchResponse> {
-        val response = friendshipService.searchByPhoneNumber(request)
+        val response = friendshipService.searchFriendByPhoneNumber(request)
         return ResponseEntity.ok(response)
     }
 
@@ -252,7 +244,7 @@ class FriendShipController(
         @Schema(description = "ID of the user to get friend requests for", example = "123e4567-e89b-12d3-a456-426614174000")
         @PathVariable userId: UUID
     ) : ResponseEntity<List<FriendRequestResponse>> {
-        val requests = friendshipService.getReceivedFriendRequests(userId)
+        val requests = friendshipService.getPendingFriendRequests(userId)
         return ResponseEntity.ok(requests)
     }
 }

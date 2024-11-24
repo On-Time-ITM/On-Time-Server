@@ -1,10 +1,9 @@
 package org.itm.ontime.domain.user.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.itm.ontime.domain.friendship.entity.Friendship
+import org.itm.ontime.domain.meeting.entity.Meeting
+import org.itm.ontime.domain.meeting.entity.MeetingParticipant
 import org.itm.ontime.global.entity.BaseEntity
 
 @Entity
@@ -19,11 +18,17 @@ class User(
 
     @Column(nullable = false) var name: String,
 
-    @OneToMany(mappedBy = "requester")
+    @OneToMany(mappedBy = "requester", cascade = [CascadeType.ALL], orphanRemoval = true)
     val sentFriendRequests: MutableList<Friendship> = mutableListOf(),
 
-    @OneToMany(mappedBy = "receiver")
+    @OneToMany(mappedBy = "receiver", cascade = [CascadeType.ALL], orphanRemoval = true)
     val receivedFriendRequests: MutableList<Friendship> = mutableListOf(),
+
+    @OneToMany(mappedBy = "host", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val hostedMeetings: MutableList<Meeting> = mutableListOf(),
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val participatedMeetings: MutableList<MeetingParticipant> = mutableListOf(),
 
     @Column(nullable = false)
     var tardinessRate: Int = 0

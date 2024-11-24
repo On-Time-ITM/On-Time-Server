@@ -14,7 +14,7 @@ data class FriendshipAcceptRequest(
     val friendshipId: UUID,
 
     @Schema(
-        description = "ID of the user accepting the friend request",
+        description = "ID of the user that received a friend request",
         example = "987fcdeb-51d2-3456-bcde-789012345678"
     )
     @field:NotBlank
