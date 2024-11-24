@@ -1,6 +1,6 @@
 package org.itm.ontime.application.meeting.service
 
-import jakarta.transaction.Transactional
+
 import org.itm.ontime.application.meeting.exception.MeetingNotFoundException
 import org.itm.ontime.application.meeting.exception.NotMeetingHostException
 import org.itm.ontime.application.user.exception.UserNotFoundException
@@ -12,6 +12,7 @@ import org.itm.ontime.presentation.meeting.request.CreateMeetingRequest
 import org.itm.ontime.presentation.meeting.request.DeleteMeetingRequest
 import org.itm.ontime.presentation.meeting.response.MeetingResponse
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
@@ -19,6 +20,7 @@ class MeetingService(
     private val userRepository: UserRepository,
     private val meetingRepository: MeetingRepository
 ) {
+    @Transactional(readOnly = true)
     fun getMeeting(meetingId: UUID) : MeetingResponse {
         val meeting = meetingRepository.findById(meetingId)
             .orElseThrow { MeetingNotFoundException(meetingId) }
@@ -26,6 +28,7 @@ class MeetingService(
         return MeetingResponse.of(meeting)
     }
 
+    @Transactional(readOnly = true)
     fun getMeetingList(userId: UUID) : List<MeetingResponse> {
         val user = userRepository.findById(userId)
             .orElseThrow{ UserNotFoundException.fromId(userId) }
@@ -64,6 +67,7 @@ class MeetingService(
         return meeting.id
     }
 
+    @Transactional
     fun deleteMeeting(request: DeleteMeetingRequest): UUID {
         val meeting = meetingRepository.findById(request.meetingId)
             .orElseThrow { MeetingNotFoundException(request.meetingId) }

@@ -11,6 +11,7 @@ import org.itm.ontime.presentation.location.request.CreateUserLocationsRequest
 import org.itm.ontime.presentation.location.request.UpdateUserLocationsRequest
 import org.itm.ontime.presentation.location.response.UserLocationResponse
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
@@ -20,6 +21,7 @@ class UserLocationService (
     private val meetingRepository: MeetingRepository
 ){
 
+    @Transactional(readOnly = true)
     fun getUserLocationList(meetingId: UUID) : List<UserLocationResponse> {
         val meeting = meetingRepository.findById(meetingId)
             .orElseThrow { MeetingNotFoundException(meetingId) }
@@ -36,7 +38,7 @@ class UserLocationService (
         }
     }
 
-
+    @Transactional
     fun createUserLocations(request: CreateUserLocationsRequest) : List<UUID> {
         val meeting = meetingRepository.findById(request.meetingId)
             .orElseThrow { MeetingNotFoundException(request.meetingId) }
@@ -44,34 +46,31 @@ class UserLocationService (
         val userLocationList = request.locations.map {
             val user = userRepository.findById(it.keys.first())
                 .orElseThrow { UserNotFoundException.fromId(it.keys.first()) }
-            UserLocation(
+            UserLocation.create(
                 user = user,
                 meeting = meeting,
                 location = it.values.first()
             )
         }
-        userLocationRepository.saveAll(userLocationList)
-        meeting.apply { this.userLocations.addAll(userLocationList) }
-        return userLocationList.map { it.id }.toList()
+
+        return userLocationRepository.saveAll(userLocationList)
+            .map { it.id }
     }
 
-    fun updateUserLocations(request: UpdateUserLocationsRequest) : List<UUID> {
+    @Transactional
+    fun updateUserLocations(request: UpdateUserLocationsRequest): List<UUID> {
         val meeting = meetingRepository.findById(request.meetingId)
             .orElseThrow { MeetingNotFoundException(request.meetingId) }
 
-        val userLocationIds : MutableList<UUID> = mutableListOf()
-
-        request.locations.map {
+        return request.locations.map {
             val user = userRepository.findById(it.keys.first())
                 .orElseThrow { UserNotFoundException.fromId(it.keys.first()) }
+
             val userLocation = userLocationRepository.findByUserIdAndMeetingId(user.id, meeting.id)
                 ?: throw UserLocationNotFoundException(user.id, meeting.id)
-            userLocation.updateLocation(it.values.first())
-            userLocationRepository.save(userLocation)
-            meeting.apply { this.userLocations.add(userLocation) }
-            userLocationIds.add(userLocation.id)
-        }
 
-        return userLocationIds
+            userLocation.updateLocation(it.values.first())
+            userLocation.id
+        }
     }
 }
