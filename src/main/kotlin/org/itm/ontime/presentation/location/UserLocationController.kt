@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/meeting/location")
+@RequestMapping("/location")
 @Tag(name = "User Location", description = "User location management APIs")
 class UserLocationController (
     private val userLocationService: UserLocationService
