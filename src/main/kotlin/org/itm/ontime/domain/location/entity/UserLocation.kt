@@ -7,7 +7,7 @@ import org.itm.ontime.global.entity.BaseEntity
 
 @Entity
 @Table(name = "user_location")
-class UserLocation(
+class UserLocation private constructor(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false) val user: User,
 
@@ -19,5 +19,13 @@ class UserLocation(
 ) : BaseEntity() {
     fun updateLocation(location: Location) {
         this.location = location
+    }
+
+    companion object {
+        fun create(user: User, meeting: Meeting, location: Location): UserLocation {
+            val userLocation = UserLocation(user, meeting, location)
+            meeting.addUserLocation(userLocation)
+            return userLocation
+        }
     }
 }
