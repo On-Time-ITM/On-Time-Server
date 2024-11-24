@@ -2,7 +2,8 @@ package org.itm.ontime.presentation.meeting.request
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.*
-import org.itm.ontime.domain.common.Location
+import org.itm.ontime.domain.location.entity.Location
+import org.itm.ontime.domain.payment.entity.AccountInfo
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
@@ -37,11 +38,11 @@ data class CreateMeetingRequest(
     val lateFee: BigDecimal,
 
     @Schema(
-        description = "Bank account number",
-        example = "1234-5678"
+        description = "Account information",
+        example = "{\"accountNumber\": \"1234567890\", \"bankName\": \"Bank of America\"}"
     )
     @field:NotBlank
-    val bankAccount: String,
+    val accountInfo: AccountInfo,
 
     @Schema(
         description = "Host's user ID",
