@@ -1,8 +1,8 @@
-package org.itm.ontime.presentation.user.request
+package org.itm.ontime.presentation.location.request
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
-import org.itm.ontime.domain.common.Location
+import org.itm.ontime.domain.location.entity.Location
 import java.util.*
 
 @Schema(description = "Request to update user locations")

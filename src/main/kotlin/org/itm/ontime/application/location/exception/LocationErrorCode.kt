@@ -1,12 +1,12 @@
-package org.itm.ontime.application.user.exception
+package org.itm.ontime.application.location.exception
 
 import org.itm.ontime.global.error.ErrorCode
 import org.springframework.http.HttpStatus
 
-enum class UserErrorCode(
+enum class LocationErrorCode(
     override val status: HttpStatus,
     override val code: String,
     override val message: String
 ) : ErrorCode {
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "User not found"),
+    USER_LOCATION_NOT_FOUND(HttpStatus.NOT_FOUND, "L001", "User location not found"),
 }

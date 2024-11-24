@@ -1,9 +1,9 @@
-package org.itm.ontime.domain.user.entity
+package org.itm.ontime.domain.location.entity
 
 import jakarta.persistence.*
 import lombok.Getter
-import org.itm.ontime.domain.common.Location
 import org.itm.ontime.domain.meeting.entity.Meeting
+import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.global.entity.BaseEntity
 
 @Entity

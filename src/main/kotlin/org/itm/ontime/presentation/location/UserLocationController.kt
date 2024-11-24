@@ -1,14 +1,14 @@
-package org.itm.ontime.presentation.user
+package org.itm.ontime.presentation.location
 
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.itm.ontime.application.user.service.UserLocationService
-import org.itm.ontime.presentation.user.request.CreateUserLocationsRequest
-import org.itm.ontime.presentation.user.request.UpdateUserLocationsRequest
-import org.itm.ontime.presentation.user.request.UserLocationResponse
+import org.itm.ontime.application.location.service.UserLocationService
+import org.itm.ontime.presentation.location.request.CreateUserLocationsRequest
+import org.itm.ontime.presentation.location.request.UpdateUserLocationsRequest
+import org.itm.ontime.presentation.location.response.UserLocationResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*

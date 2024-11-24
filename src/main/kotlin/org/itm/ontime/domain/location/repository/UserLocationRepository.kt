@@ -1,6 +1,6 @@
-package org.itm.ontime.domain.user.repository
+package org.itm.ontime.domain.location.repository
 
-import org.itm.ontime.domain.user.entity.UserLocation
+import org.itm.ontime.domain.location.entity.UserLocation
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 

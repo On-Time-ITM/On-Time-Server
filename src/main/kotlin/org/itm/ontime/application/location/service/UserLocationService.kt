@@ -1,15 +1,15 @@
-package org.itm.ontime.application.user.service
+package org.itm.ontime.application.location.service
 
+import org.itm.ontime.application.location.exception.UserLocationNotFoundException
 import org.itm.ontime.application.meeting.exception.MeetingNotFoundException
-import org.itm.ontime.application.meeting.exception.UserLocationNotFoundException
 import org.itm.ontime.application.user.exception.UserNotFoundException
+import org.itm.ontime.domain.location.entity.UserLocation
+import org.itm.ontime.domain.location.repository.UserLocationRepository
 import org.itm.ontime.domain.meeting.repository.MeetingRepository
-import org.itm.ontime.domain.user.entity.UserLocation
-import org.itm.ontime.domain.user.repository.UserLocationRepository
 import org.itm.ontime.domain.user.repository.UserRepository
-import org.itm.ontime.presentation.user.request.CreateUserLocationsRequest
-import org.itm.ontime.presentation.user.request.UpdateUserLocationsRequest
-import org.itm.ontime.presentation.user.request.UserLocationResponse
+import org.itm.ontime.presentation.location.request.CreateUserLocationsRequest
+import org.itm.ontime.presentation.location.request.UpdateUserLocationsRequest
+import org.itm.ontime.presentation.location.response.UserLocationResponse
 import org.springframework.stereotype.Service
 import java.util.*
 

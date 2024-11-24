@@ -1,7 +1,6 @@
-package org.itm.ontime.application.meeting.exception
+package org.itm.ontime.application.location.exception
 
 import io.swagger.v3.oas.annotations.media.Schema
-import org.itm.ontime.application.user.exception.UserErrorCode
 import org.itm.ontime.global.error.BusinessException
 import java.util.*
 
@@ -12,6 +11,6 @@ class UserLocationNotFoundException(
     @Schema(description = "Meeting Id that user is belonging", example = "142f42367-d34c-22f2-b365-498740174000")
     private val meetingId: UUID
 ) : BusinessException(
-    UserErrorCode.USER_LOCATION_NOT_FOUND,
+    LocationErrorCode.USER_LOCATION_NOT_FOUND,
     "Failed to track location of user $userId in meeting $meetingId"
 )

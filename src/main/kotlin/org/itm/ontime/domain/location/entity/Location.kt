@@ -1,4 +1,4 @@
-package org.itm.ontime.domain.common
+package org.itm.ontime.domain.location.entity
 
 import jakarta.persistence.Embeddable
 
