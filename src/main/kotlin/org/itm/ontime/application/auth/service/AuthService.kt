@@ -67,22 +67,16 @@ class AuthService(
     @Transactional
     fun createTokens(userId: UUID) : TokenResponse {
 
-        val existingToken = refreshTokenRepository.findByUserId(userId).orElse(null)
+        val existingToken = refreshTokenRepository.findByUserId(userId)
 
         existingToken?.let {
-            refreshTokenRepository.deleteById(it.id)
-            refreshTokenRepository.flush() // TODO : flush 성능 문제..
+            refreshTokenRepository.deleteByUserId(userId)
         }
 
         val accessToken = jwtTokenProvider.createAccessToken(userId)
         val refreshToken = jwtTokenProvider.createRefreshToken(userId)
-
-        refreshTokenRepository.save(
-            RefreshToken(
-                userId = userId,
-                token = refreshToken
-            )
-        )
+        val newToken = RefreshToken(userId, refreshToken)
+        refreshTokenRepository.save(newToken)
 
         return TokenResponse.of(
             accessToken = accessToken,
@@ -94,7 +88,7 @@ class AuthService(
     @Transactional
     fun refreshToken(request: TokenRefreshRequest): TokenResponse {
         val refreshToken = refreshTokenRepository.findByToken(request.refreshToken)
-            .orElseThrow { InvalidRefreshTokenException(request.refreshToken) }
+            ?: throw InvalidRefreshTokenException(request.refreshToken)
 
         if (refreshToken.isExpired()) {
             refreshTokenRepository.delete(refreshToken)
