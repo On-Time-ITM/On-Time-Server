@@ -40,19 +40,23 @@ class Meeting(
     val userLocations : MutableList<UserLocation> = mutableListOf(),
 
     @OneToMany(mappedBy = "meeting")
-    val attendances: MutableList<Attendance> = mutableListOf()
+    val attendances: MutableList<Attendance> = mutableListOf(),
+
+    @Column(nullable = true) var qrCode: String ?= null
 
 ) : BaseEntity() {
-
-    @Column(nullable = true)
-    private var qrCode: String ?= null
-
     @Column(nullable = true)
     private var profileImage: String ?= null
 
-    fun updateUserLocation(userLocation: UserLocation) {
+    fun addUserLocation(userLocation: UserLocation) {
         userLocations.add(userLocation)
         userLocation.meeting = this
     }
+
+    fun createQRCode(qrCode: String) {
+        this.qrCode = qrCode
+    }
+
+    fun hasQRCode() = qrCode?.isNotEmpty() == true
 
 }

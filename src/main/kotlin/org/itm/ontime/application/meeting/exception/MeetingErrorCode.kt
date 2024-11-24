@@ -13,5 +13,6 @@ enum class MeetingErrorCode(
     INVALID_MEETING_TIME(HttpStatus.BAD_REQUEST, "M002", "Invalid meeting time"),
     NOT_MEETING_HOST(HttpStatus.FORBIDDEN, "M003", "Not a host of this meeting"),
     ALREADY_CHECKED_ATTENDANCE(HttpStatus.BAD_REQUEST, "M004", "Already checked attendance"),
-    INVALID_QR_CODE(HttpStatus.BAD_REQUEST, "M005", "Invalid QR code"),
+    QR_CODE_NOT_FOUND(HttpStatus.BAD_REQUEST, "M005", "QR code not found"),
+    QR_CODE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "M006", "QR code already exists"),
 }
