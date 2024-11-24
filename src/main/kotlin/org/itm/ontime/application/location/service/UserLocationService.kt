@@ -51,6 +51,7 @@ class UserLocationService (
             )
         }
         userLocationRepository.saveAll(userLocationList)
+        meeting.apply { this.userLocations.addAll(userLocationList) }
         return userLocationList.map { it.id }.toList()
     }
 
@@ -67,6 +68,7 @@ class UserLocationService (
                 ?: throw UserLocationNotFoundException(user.id, meeting.id)
             userLocation.updateLocation(it.values.first())
             userLocationRepository.save(userLocation)
+            meeting.apply { this.userLocations.add(userLocation) }
             userLocationIds.add(userLocation.id)
         }
 
