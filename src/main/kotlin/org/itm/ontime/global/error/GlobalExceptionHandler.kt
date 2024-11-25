@@ -36,9 +36,6 @@ class GlobalExceptionHandler {
         log.error("handleMethodArgumentNotValidException", exception)
 
         val bindingResult = exception.bindingResult
-            ?: return ResponseEntity
-                .status(CommonErrorCode.INVALID_INPUT_VALUE.status)
-                .body(ErrorResponse.of(CommonErrorCode.INVALID_INPUT_VALUE))
 
         val errors = bindingResult.fieldErrors.map { fieldError ->
             ErrorResponse.FieldError(
