@@ -1,15 +1,18 @@
 package org.itm.ontime.domain.auth.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 import lombok.Getter
 import org.itm.ontime.global.entity.BaseEntity
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Getter
 @Table(
-    name = "refresh_tokens",
+    name = "refresh_token",
     uniqueConstraints = [
         UniqueConstraint(
             name = "uk_refresh_tokens_user_id",

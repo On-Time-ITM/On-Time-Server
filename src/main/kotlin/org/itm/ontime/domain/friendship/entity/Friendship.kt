@@ -7,7 +7,7 @@ import org.itm.ontime.global.entity.BaseEntity
 
 @Entity
 @Getter
-@Table(name = "friendships")
+@Table(name = "friendship")
 class Friendship(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")

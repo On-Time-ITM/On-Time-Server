@@ -53,7 +53,7 @@ class Meeting(
         userLocation.meeting = this
     }
 
-    fun createQRCode(qrCode: String) {
+    fun addQRCode(qrCode: String) {
         this.qrCode = qrCode
     }
 
