@@ -1,12 +1,10 @@
 package org.itm.ontime.domain.friendship.entity
 
 import jakarta.persistence.*
-import lombok.Getter
 import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.global.entity.BaseEntity
 
 @Entity
-@Getter
 @Table(name = "friendship")
 class Friendship(
     @ManyToOne(fetch = FetchType.LAZY)

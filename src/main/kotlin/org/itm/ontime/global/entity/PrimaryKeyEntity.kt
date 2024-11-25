@@ -1,20 +1,12 @@
 package org.itm.ontime.global.entity
 
 import com.github.f4b6a3.ulid.UlidCreator
-import jakarta.persistence.Column
-import jakarta.persistence.Id
-import jakarta.persistence.MappedSuperclass
-import jakarta.persistence.PostLoad
-import jakarta.persistence.PostPersist
-import jakarta.persistence.Transient
-import lombok.Getter
+import jakarta.persistence.*
 import org.hibernate.proxy.HibernateProxy
 import org.springframework.data.domain.Persistable
-import java.util.Objects
-import java.util.UUID
+import java.util.*
 
 @MappedSuperclass
-@Getter
 abstract class PrimaryKeyEntity : Persistable<UUID> {
     @Id
     @Column(columnDefinition = "BINARY(16)")

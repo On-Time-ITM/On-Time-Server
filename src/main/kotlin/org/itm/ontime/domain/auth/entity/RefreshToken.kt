@@ -4,13 +4,11 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
-import lombok.Getter
 import org.itm.ontime.global.entity.BaseEntity
 import java.time.LocalDateTime
 import java.util.*
 
 @Entity
-@Getter
 @Table(
     name = "refresh_token",
     uniqueConstraints = [
