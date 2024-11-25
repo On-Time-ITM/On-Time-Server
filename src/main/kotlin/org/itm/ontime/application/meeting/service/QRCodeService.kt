@@ -26,7 +26,7 @@ class QRCodeService(
         }
 
         val qrCode = qrCodeClient.createQRCode(request.meetingName)
-        meeting.createQRCode(qrCode)
+        meeting.addQRCode(qrCode)
 
         return QRCodeResponse.of(meeting.id, qrCode)
     }
