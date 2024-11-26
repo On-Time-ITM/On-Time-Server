@@ -5,7 +5,6 @@ import org.itm.ontime.application.meeting.exception.MeetingNotFoundException
 import org.itm.ontime.application.meeting.exception.NotMeetingHostException
 import org.itm.ontime.application.user.exception.UserNotFoundException
 import org.itm.ontime.domain.meeting.entity.Meeting
-import org.itm.ontime.domain.meeting.entity.MeetingParticipant
 import org.itm.ontime.domain.meeting.repository.MeetingRepository
 import org.itm.ontime.domain.user.repository.UserRepository
 import org.itm.ontime.presentation.meeting.request.CreateMeetingRequest
@@ -18,7 +17,8 @@ import java.util.*
 @Service
 class MeetingService(
     private val userRepository: UserRepository,
-    private val meetingRepository: MeetingRepository
+    private val meetingRepository: MeetingRepository,
+    private val profileImageService: ProfileImageService
 ) {
     @Transactional(readOnly = true)
     fun getMeeting(meetingId: UUID) : MeetingResponse {
@@ -50,22 +50,24 @@ class MeetingService(
             throw UserNotFoundException.fromIds(notFoundIds)
         }
 
+        val profileImage = profileImageService.createProfileImage(request)
+
         val meeting = Meeting(
-            request.name,
-            request.meetingDateTime,
-            request.location,
-            request.lateFee,
-            request.accountInfo,
-            host
+            name = request.name,
+            meetingDateTime = request.meetingDateTime,
+            location = request.location,
+            lateFee = request.lateFee,
+            accountInfo = request.accountInfo,
+            host = host,
+            participants = users,
+            profileImage = profileImage
         )
-
-        val participants = users.map { user ->
-            MeetingParticipant(meeting, user)
-        }
-
-        meeting.apply { this.participants.addAll(participants) }
+        meetingRepository.save(meeting)
+        
         return meeting.id
     }
+
+
 
     @Transactional
     fun deleteMeeting(request: DeleteMeetingRequest): UUID {

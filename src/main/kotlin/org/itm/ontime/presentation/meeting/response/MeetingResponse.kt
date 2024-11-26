@@ -48,9 +48,11 @@ data class MeetingResponse(
         example = "{\"accountNumber\": \"1234567890\", \"bankName\": \"Bank of America\"}"
     )
     @field:NotBlank
-    val accountInfo: AccountInfo
+    val accountInfo: AccountInfo,
 
     // TODO : attendance
+
+    val profileImage: ProfileImageResponse
 
 ) {
     companion object {
@@ -62,6 +64,11 @@ data class MeetingResponse(
             meeting.location,
             meeting.lateFee,
             meeting.accountInfo,
+            ProfileImageResponse.of(
+                meeting.profileImage.id,
+                meeting.profileImage.prompt,
+                meeting.profileImage.size
+            )
         )
 
         fun of(meetings: List<Meeting>): List<MeetingResponse> =

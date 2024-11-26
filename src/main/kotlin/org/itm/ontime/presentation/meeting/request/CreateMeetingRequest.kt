@@ -48,7 +48,7 @@ data class CreateMeetingRequest(
         description = "Host's user ID",
         example = "123e4567-e89b-12d3-a456-426614174000"
     )
-    @field:NotNull
+    @field:NotBlank
     val hostId: UUID,
 
     @Schema(
@@ -56,5 +56,12 @@ data class CreateMeetingRequest(
         example = "[\"123e4567-e89b-12d3-a456-426614174000\", \"987fcdeb-51d2-3456-bcde-789012345678\"]"
     )
     @field:NotEmpty
-    val participantIds: MutableList<UUID>
+    val participantIds: MutableList<UUID>,
+
+    @Schema(
+        description = "Profile image request",
+        example = "{\"prompt\": \"A photo of mobile programming meeting\", \"size\": \"1024x1024\"}"
+    )
+    @field:NotNull
+    val profileImageRequest: ProfileImageRequest
 )

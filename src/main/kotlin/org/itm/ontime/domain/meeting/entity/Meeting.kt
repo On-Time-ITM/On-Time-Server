@@ -34,7 +34,7 @@ class Meeting(
     val host: User,
 
     @OneToMany(mappedBy = "meeting", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val participants: MutableList<MeetingParticipant> = mutableListOf(),
+    val participants: MutableList<User> = mutableListOf(),
 
     @OneToMany(mappedBy = "meeting", cascade = [CascadeType.ALL], orphanRemoval = true)
     val userLocations : MutableList<UserLocation> = mutableListOf(),
@@ -42,12 +42,12 @@ class Meeting(
     @OneToMany(mappedBy = "meeting")
     val attendances: MutableList<Attendance> = mutableListOf(),
 
-    @Column(nullable = true) var qrCode: String ?= null
+    @Column(nullable = true) var qrCode: String ?= null,
+
+    @Column(nullable = false)
+    @JoinColumn(name = "profile_image_id") val profileImage: ProfileImage
 
 ) : BaseEntity() {
-    @Column(nullable = true)
-    private var profileImage: String ?= null
-
     fun addUserLocation(userLocation: UserLocation) {
         userLocations.add(userLocation)
         userLocation.meeting = this
