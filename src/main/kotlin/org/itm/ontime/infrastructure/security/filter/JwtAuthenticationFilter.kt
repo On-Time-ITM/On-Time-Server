@@ -18,13 +18,18 @@ class JwtAuthenticationFilter(
         filterChain: FilterChain
     ) {
         try {
-            val token = resolveToken(request)
-            if (token != null && jwtTokenProvider.validateToken(token)) {
-                val userId = jwtTokenProvider.getUserId(token)
-                val authorities = jwtTokenProvider.getAuthorities(token)
-                val userDetails = CustomUserDetails(userId, authorities)
-                val authentication = UsernamePasswordAuthenticationToken(userDetails, "", authorities)
-                SecurityContextHolder.getContext().authentication = authentication
+            resolveToken(request)?.let {
+                if (jwtTokenProvider.validateToken(it)) {
+                    val userId = jwtTokenProvider.getUserId(it)
+                    val authorities = jwtTokenProvider.getAuthorities(it)
+                    val userDetails = CustomUserDetails(userId, authorities)
+                    val authentication = UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        authorities
+                    )
+                    SecurityContextHolder.getContext().authentication = authentication
+                }
             }
         } catch (e: Exception) {
             SecurityContextHolder.clearContext()
@@ -34,9 +39,10 @@ class JwtAuthenticationFilter(
     }
 
     private fun resolveToken(request: HttpServletRequest): String? {
-        val bearerToken = request.getHeader("Authorization")
-        return if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            bearerToken.substring(7)
-        } else null
+        return request.getHeader("Authorization")?.let { bearerToken ->
+            if (bearerToken.startsWith("Bearer ", ignoreCase = true)) {
+                bearerToken.substring(7)
+            } else null
+        }
     }
 }

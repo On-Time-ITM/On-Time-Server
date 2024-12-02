@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank
 import java.util.*
 
 @Schema(description = "Response for user search")
-data class UserSearchResponse(
+data class UserResponse(
     @Schema(
         description = "User ID",
         example = "123e4567-e89b-12d3-a456-426614174000"
@@ -33,8 +33,8 @@ data class UserSearchResponse(
             id: UUID,
             name: String,
             phoneNumber: String
-        ): UserSearchResponse {
-            return UserSearchResponse(id, name, phoneNumber)
+        ): UserResponse {
+            return UserResponse(id, name, phoneNumber)
         }
     }
 }

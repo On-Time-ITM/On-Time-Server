@@ -8,15 +8,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.itm.ontime.application.auth.exception.common.InvalidRefreshTokenException
-import org.itm.ontime.application.auth.exception.local.DuplicationPhoneNumberException
+import org.itm.ontime.application.auth.exception.local.AlreadyExistsPhoneNumberException
 import org.itm.ontime.application.auth.exception.local.InvalidPasswordException
 import org.itm.ontime.application.auth.service.AuthService
 import org.itm.ontime.infrastructure.security.CustomUserDetails
 import org.itm.ontime.presentation.auth.request.LoginRequest
 import org.itm.ontime.presentation.auth.request.SignUpRequest
-import org.itm.ontime.presentation.auth.request.TokenRefreshRequest
-import org.itm.ontime.presentation.auth.response.LoginResponse
-import org.itm.ontime.presentation.auth.response.TokenResponse
+import org.itm.ontime.presentation.auth.response.AuthResponse
+import org.itm.ontime.presentation.auth.response.TokenInfo
+import org.itm.ontime.presentation.user.request.TokenRequest
+import org.itm.ontime.presentation.user.response.UserResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
@@ -41,13 +42,13 @@ class AuthController(
         ApiResponse(responseCode = "200", description = "Success"),
         ApiResponse(responseCode = "400", description = "Invalid input or duplicate phone number",
             content = [Content(schema = Schema(oneOf = [
-                DuplicationPhoneNumberException::class
+                AlreadyExistsPhoneNumberException::class
             ]))])
     ])
     @PostMapping("/signup")
     fun signUp(
         @Valid @RequestBody request: SignUpRequest
-    ): ResponseEntity<TokenResponse> {
+    ): ResponseEntity<UserResponse> {
         val response = authService.signUp(request)
         return ResponseEntity.ok(response)
     }
@@ -65,7 +66,7 @@ class AuthController(
     @PostMapping("/login")
     fun login(
         @Valid @RequestBody request: LoginRequest
-    ): ResponseEntity<LoginResponse> {
+    ): ResponseEntity<AuthResponse> {
         val response = authService.login(request)
         return ResponseEntity.ok(response)
     }
@@ -80,11 +81,11 @@ class AuthController(
             ApiResponse(responseCode = "401", description = "Invalid refresh token",
                 content = [Content(schema = Schema(implementation = InvalidRefreshTokenException::class))])
     ])
-    @PostMapping("/refresh")
-    fun refreshToken(
-        @Valid @RequestBody request: TokenRefreshRequest
-    ): ResponseEntity<TokenResponse> {
-        val response = authService.refreshToken(request)
+    @PostMapping("/reissue")
+    fun reissueToken(
+        @Valid @RequestBody request: TokenRequest
+    ): ResponseEntity<TokenInfo> {
+        val response = authService.reissue(request)
         return ResponseEntity.ok(response)
     }
 

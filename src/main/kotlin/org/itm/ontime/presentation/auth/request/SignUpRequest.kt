@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
 data class SignUpRequest(
-    // TODO : phoneNum, pwd는 NotBlank 필요없는지?
     @Schema(description = "User phone number", example = "010-1234-5678")
+    @field:NotBlank(message = "Phone number is required")
     @field:Pattern(
         regexp = "^010-\\\\d{4}-\\\\d{4}\$",
         message = "Phone number must be in format: 010-XXXX-XXXX"
@@ -15,6 +15,7 @@ data class SignUpRequest(
     val phoneNumber: String,
 
     @Schema(description = "Password", example = "pwd123@")
+    @field:NotBlank(message = "Password is required")
     @field:Pattern(
         regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,20}$",
         message = "Password must be 8-20 characters containing letters, numbers and special characters"

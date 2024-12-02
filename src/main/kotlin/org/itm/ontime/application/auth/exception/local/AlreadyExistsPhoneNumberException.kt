@@ -5,7 +5,8 @@ import org.itm.ontime.application.auth.exception.common.AuthErrorCode
 import org.itm.ontime.global.error.BusinessException
 
 
-class DuplicationPhoneNumberException (
+@Schema(description = "Exceptions that occur when the phone number is duplicated")
+class AlreadyExistsPhoneNumberException (
     @Schema(description = "Phone number that caused the duplication", example = "010-1234-5678")
     val phoneNumber: String
 ) : BusinessException(

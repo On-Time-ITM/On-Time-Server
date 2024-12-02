@@ -44,5 +44,4 @@ abstract class PrimaryKeyEntity : Persistable<UUID> {
     protected fun load() {
         _isNew = false
     }
-
 }

@@ -2,19 +2,20 @@ package org.itm.ontime.application.auth.service
 
 import jakarta.transaction.Transactional
 import org.itm.ontime.application.auth.exception.common.InvalidRefreshTokenException
-import org.itm.ontime.application.auth.exception.local.DuplicationPhoneNumberException
+import org.itm.ontime.application.auth.exception.common.UserAlreadyLogoutException
+import org.itm.ontime.application.auth.exception.local.AlreadyExistsPhoneNumberException
 import org.itm.ontime.application.auth.exception.local.InvalidPasswordException
 import org.itm.ontime.application.user.exception.UserNotFoundException
-import org.itm.ontime.domain.auth.entity.RefreshToken
 import org.itm.ontime.domain.auth.repository.RefreshTokenRepository
 import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.domain.user.repository.UserRepository
 import org.itm.ontime.infrastructure.security.jwt.JwtTokenProvider
 import org.itm.ontime.presentation.auth.request.LoginRequest
 import org.itm.ontime.presentation.auth.request.SignUpRequest
-import org.itm.ontime.presentation.auth.request.TokenRefreshRequest
-import org.itm.ontime.presentation.auth.response.LoginResponse
-import org.itm.ontime.presentation.auth.response.TokenResponse
+import org.itm.ontime.presentation.auth.response.AuthResponse
+import org.itm.ontime.presentation.auth.response.TokenInfo
+import org.itm.ontime.presentation.user.request.TokenRequest
+import org.itm.ontime.presentation.user.response.UserResponse
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -27,9 +28,9 @@ class AuthService(
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
     @Transactional
-    fun signUp(request: SignUpRequest) : TokenResponse {
+    fun signUp(request: SignUpRequest) : UserResponse {
         if (userRepository.existsByPhoneNumber(request.phoneNumber)) {
-            throw DuplicationPhoneNumberException(request.phoneNumber)
+            throw AlreadyExistsPhoneNumberException(request.phoneNumber)
         }
 
         val user = userRepository.save(User(
@@ -38,25 +39,40 @@ class AuthService(
             name = request.name
         ))
 
-        val tokenResponse = createTokens(user.id)
-        return tokenResponse
+        return UserResponse.of(
+            id = user.id,
+            name = user.name,
+            phoneNumber = user.phoneNumber
+        )
     }
 
     @Transactional
-    fun login(request: LoginRequest) : LoginResponse {
+    fun login(request: LoginRequest): AuthResponse {
         val user = userRepository.findByPhoneNumber(request.phoneNumber)
-            ?: throw UserNotFoundException.fromPhoneNumber(request.phoneNumber)
+            ?: throw UserNotFoundException(request.phoneNumber)
 
         if (!passwordEncoder.matches(request.password, user.password)) {
             throw InvalidPasswordException()
         }
 
-        return LoginResponse.of(
-            tokenResponse = createTokens(user.id),
-            userId = user.id,
-            name = user.name,
-            phoneNumber = user.phoneNumber,
-            tardinessRate = user.tardinessRate
+        refreshTokenRepository.deleteByUserId(user.id)
+        refreshTokenRepository.flush()
+
+        val accessToken = jwtTokenProvider.createAccessToken(user.id)
+        val refreshToken = jwtTokenProvider.createRefreshToken(user.id)
+        refreshTokenRepository.save(refreshToken)
+
+        return AuthResponse.of(
+            userInfo = UserResponse.of(
+                id = user.id,
+                name = user.name,
+                phoneNumber = user.phoneNumber
+            ),
+            tokenInfo = TokenInfo.of(
+                accessToken = accessToken,
+                refreshToken = refreshToken,
+                accessTokenExpiresIn = jwtTokenProvider.getAccessTokenValidityInSeconds()
+            )
         )
     }
 
@@ -64,38 +80,27 @@ class AuthService(
         refreshTokenRepository.deleteByUserId(userId)
     }
 
-    @Transactional
-    fun createTokens(userId: UUID) : TokenResponse {
-
-        val existingToken = refreshTokenRepository.findByUserId(userId)
-
-        existingToken?.let {
-            refreshTokenRepository.deleteByUserId(userId)
+    fun reissue(tokenRequest: TokenRequest): TokenInfo {
+        if (!jwtTokenProvider.validateToken(tokenRequest.refreshToken)) {
+            throw InvalidRefreshTokenException(tokenRequest.refreshToken)
         }
 
-        val accessToken = jwtTokenProvider.createAccessToken(userId)
-        val refreshToken = jwtTokenProvider.createRefreshToken(userId)
-        val newToken = RefreshToken(userId, refreshToken)
-        refreshTokenRepository.save(newToken)
 
-        return TokenResponse.of(
-            accessToken = accessToken,
-            refreshToken = refreshToken,
-            expiresIn = jwtTokenProvider.getAccessTokenValidityInSeconds(),
+        val userId = jwtTokenProvider.getUserId(tokenRequest.accessToken)
+        val refreshToken = refreshTokenRepository.findByUserId(userId)
+            ?: throw UserAlreadyLogoutException(userId)
+
+        if (refreshToken.token != tokenRequest.refreshToken) {
+            throw InvalidRefreshTokenException(tokenRequest.refreshToken)
+        }
+
+        val newAccessToken = jwtTokenProvider.createAccessToken(userId)
+        val newRefreshToken = jwtTokenProvider.createRefreshToken(userId)
+
+        return TokenInfo(
+            accessToken = newAccessToken,
+            refreshToken = newRefreshToken,
+            accessTokenExpiresIn = Date().time + jwtTokenProvider.getAccessTokenValidityInSeconds()
         )
-    }
-
-    @Transactional
-    fun refreshToken(request: TokenRefreshRequest): TokenResponse {
-        val refreshToken = refreshTokenRepository.findByToken(request.refreshToken)
-            ?: throw InvalidRefreshTokenException(request.refreshToken)
-
-        if (refreshToken.isExpired()) {
-            refreshTokenRepository.delete(refreshToken)
-            throw InvalidRefreshTokenException(request.refreshToken)
-        }
-
-        val tokenResponse = createTokens(refreshToken.userId)
-        return tokenResponse
     }
 }

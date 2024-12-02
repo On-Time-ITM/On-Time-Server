@@ -1,15 +1,16 @@
 package org.itm.ontime.infrastructure.security.jwt
 
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.ExpiredJwtException
-import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.*
+import io.jsonwebtoken.security.Keys
+import jakarta.servlet.http.HttpServletRequest
 import org.itm.ontime.application.auth.exception.common.ExpiredTokenException
 import org.itm.ontime.application.auth.exception.common.InvalidTokenException
+import org.itm.ontime.domain.auth.entity.RefreshToken
+import org.itm.ontime.domain.auth.repository.RefreshTokenRepository
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
-import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.crypto.SecretKey
@@ -23,11 +24,16 @@ class JwtTokenProvider(
     private val accessTokenValidityInSeconds: Long,
 
     @Value("\${jwt.refresh-token-validity-in-seconds}")
-    private val refreshTokenValidityInSeconds: Long
+    private val refreshTokenValidityInSeconds: Long,
 
-
+    private val refreshTokenRepository: RefreshTokenRepository
 ) {
     private val key: SecretKey
+
+    companion object {
+        const val AUTHORIZATION_HEADER = "Authorization"
+        const val BEARER_PREFIX = "Bearer "
+    }
 
     init {
         val keyBytes = Base64.getDecoder().decode(secretKey)
@@ -35,41 +41,62 @@ class JwtTokenProvider(
     }
 
     fun createAccessToken(userId: UUID): String {
+        val authentication = UsernamePasswordAuthenticationToken(userId, "", listOf())
         val now = Date()
-        val validity = Date(now.time + accessTokenValidityInSeconds * 1000)
+        val expiration = Date(now.time + accessTokenValidityInSeconds)
 
         return Jwts.builder()
-            .setSubject(userId.toString())
+            .setSubject(authentication.name)
+            .claim("auth", authentication.authorities)
             .setIssuedAt(now)
-            .setExpiration(validity)
-            .signWith(key)
+            .setExpiration(expiration)
+            .signWith(key, SignatureAlgorithm.HS512)
             .compact()
     }
 
-    fun createRefreshToken(userId: UUID): String {
+    fun createRefreshToken(userId: UUID): RefreshToken {
         val now = Date()
-        val validity = Date(now.time + refreshTokenValidityInSeconds * 1000)
+        val expiration = Date(now.time + refreshTokenValidityInSeconds)
 
-        return Jwts.builder()
-            .setSubject(userId.toString())
+        val token = Jwts.builder()
             .setIssuedAt(now)
-            .setExpiration(validity)
-            .signWith(key)
+            .setExpiration(expiration)
+            .signWith(key, SignatureAlgorithm.HS512)
             .compact()
+
+        val refreshToken = refreshTokenRepository.save(RefreshToken(
+            userId = userId,
+            token = token,
+            expiresAt = expiration
+        ))
+
+        return refreshToken
     }
 
     fun validateToken(token: String): Boolean {
         try {
-            val claims = getClaims(token)
-            return !claims.expiration.before(Date())
-        } catch (e: ExpiredJwtException) {
-            throw ExpiredTokenException(token)
+            getClaims(token)
+            return true
         } catch (e: Exception) {
-            throw InvalidTokenException(token)
+            when (e) {
+                is SecurityException -> {} // 잘못된 JWT 서명
+                is MalformedJwtException -> {} // 잘못된 JWT 토큰
+                is ExpiredJwtException -> {} // 만료된 JWT 토큰
+                is UnsupportedJwtException -> {} // 지원되지 않는 JWT 토큰
+                is IllegalArgumentException -> {} // JWT 토큰이 잘못됨
+            }
+            return false
         }
     }
 
-    private fun getClaims(token: String): Claims { // TODO : 왜 얘만 private로 해야 할까
+    fun resolveToken(request: HttpServletRequest): String? {
+        val bearerToken = request.getHeader(AUTHORIZATION_HEADER)
+        return if (bearerToken != null && bearerToken.startsWith(BEARER_PREFIX)) {
+            bearerToken.substring(7)
+        } else null
+    }
+
+    private fun getClaims(token: String): Claims {
         return try {
             Jwts.parserBuilder()
                 .setSigningKey(key)

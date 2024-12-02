@@ -1,9 +1,10 @@
 package org.itm.ontime.domain.user.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 import org.itm.ontime.domain.friendship.entity.Friendship
-import org.itm.ontime.domain.meeting.entity.Meeting
-import org.itm.ontime.domain.meeting.entity.MeetingParticipant
 import org.itm.ontime.global.entity.BaseEntity
 
 @Entity
@@ -11,28 +12,21 @@ import org.itm.ontime.global.entity.BaseEntity
 class User(
     @Column(nullable = false, unique = true) val phoneNumber: String,
 
-    @Column(nullable = true)
-    private val kakaoId: String? = null,
-
     @Column(nullable = false) var password: String,
 
     @Column(nullable = false) var name: String,
 
-    @OneToMany(mappedBy = "requester", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val sentFriendRequests: MutableList<Friendship> = mutableListOf(),
+    @OneToMany(mappedBy = "requester")
+    val sentFriendships: MutableList<Friendship> = mutableListOf(),
 
-    @OneToMany(mappedBy = "receiver", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val receivedFriendRequests: MutableList<Friendship> = mutableListOf(),
+    @OneToMany(mappedBy = "receiver")
+    val receivedFriendships: MutableList<Friendship> = mutableListOf()
+) : BaseEntity() {
+    fun addSentFriendship(friendship: Friendship) {
+        sentFriendships.add(friendship)
+    }
 
-    @OneToMany(mappedBy = "host", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val hostedMeetings: MutableList<Meeting> = mutableListOf(),
-
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val participatedMeetings: MutableList<MeetingParticipant> = mutableListOf(),
-
-    @Column(nullable = false)
-    var tardinessRate: Int = 0
-
-    ) : BaseEntity() {
-
+    fun addReceivedFriendship(friendship: Friendship) {
+        receivedFriendships.add(friendship)
+    }
 }
