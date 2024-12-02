@@ -10,13 +10,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.itm.ontime.application.friendship.service.FriendshipService
-import org.itm.ontime.presentation.friendship.request.FriendshipAcceptRequest
-import org.itm.ontime.presentation.friendship.request.FriendshipDeleteRequest
-import org.itm.ontime.presentation.friendship.request.FriendshipRequest
+import org.itm.ontime.presentation.friendship.request.AcceptFriendshipRequest
+import org.itm.ontime.presentation.friendship.request.DeleteFriendshipRequest
+import org.itm.ontime.presentation.friendship.request.SendFriendshipRequest
 import org.itm.ontime.presentation.friendship.response.FriendRequestResponse
-import org.itm.ontime.presentation.friendship.response.FriendResponse
-import org.itm.ontime.presentation.user.request.UserSearchRequest
-import org.itm.ontime.presentation.user.response.UserSearchResponse
+import org.itm.ontime.presentation.user.response.UserResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -37,7 +35,7 @@ class FriendShipController(
             description = "User found successfully",
             content = [Content(
                 mediaType = "application/json",
-                schema = Schema(implementation = UserSearchResponse::class)
+                schema = Schema(implementation = UserResponse::class)
             )]
         ),
         ApiResponse(
@@ -59,9 +57,9 @@ class FriendShipController(
     ])
     @GetMapping("/search")
     fun searchFriend(
-        @RequestBody @Valid request: UserSearchRequest
-    ) : ResponseEntity<UserSearchResponse> {
-        val response = friendshipService.searchFriendByPhoneNumber(request)
+        @RequestParam phoneNumber: String
+    ) : ResponseEntity<UserResponse> {
+        val response = friendshipService.searchFriendByPhoneNumber(phoneNumber)
         return ResponseEntity.ok(response)
     }
 
@@ -92,7 +90,7 @@ class FriendShipController(
     ])
     @PostMapping
     fun sendFriendRequest(
-        @RequestBody @Valid request: FriendshipRequest
+        @RequestBody @Valid request: SendFriendshipRequest
     ) : ResponseEntity<UUID> {
         val requestId = friendshipService.sendFriendRequest(request)
         return ResponseEntity.ok(requestId)
@@ -125,7 +123,7 @@ class FriendShipController(
     ])
     @PatchMapping("/accept")
     fun acceptFriendRequest(
-        @RequestBody @Valid request: FriendshipAcceptRequest
+        @RequestBody @Valid request: AcceptFriendshipRequest
     ) : ResponseEntity<UUID> {
         val requestId = friendshipService.acceptFriendRequest(request)
         return ResponseEntity.ok(requestId)
@@ -158,7 +156,7 @@ class FriendShipController(
     ])
     @PatchMapping("/reject")
     fun rejectFriendRequest(
-        @RequestBody @Valid request: FriendshipAcceptRequest
+        @RequestBody @Valid request: AcceptFriendshipRequest
     ) : ResponseEntity<UUID> {
         val requestId = friendshipService.rejectFriendRequest(request)
         return ResponseEntity.ok(requestId)
@@ -186,7 +184,7 @@ class FriendShipController(
     ])
     @DeleteMapping("/{userId}")
     fun deleteFriend(
-        @RequestBody @Valid request: FriendshipDeleteRequest
+        @RequestBody @Valid request: DeleteFriendshipRequest
     ) : ResponseEntity<Unit> {
         friendshipService.deleteFriend(request)
         return ResponseEntity.noContent().build()
@@ -202,7 +200,7 @@ class FriendShipController(
             description = "Successfully retrieved friend list",
             content = [Content(
                 mediaType = "application/json",
-                array = ArraySchema(schema = Schema(implementation = FriendResponse::class))
+                array = ArraySchema(schema = Schema(implementation = UserResponse::class))
             )]
         ),
         ApiResponse(
@@ -211,11 +209,11 @@ class FriendShipController(
             content = [Content(mediaType = "application/json")]
         )
     ])
-    @GetMapping("/{userId}")
+    @GetMapping("/list/{userId}")
     fun getFriendList(
         @Schema(description = "ID of the user to get friends for", example = "123e4567-e89b-12d3-a456-426614174000")
         @PathVariable userId: UUID
-    ) : ResponseEntity<List<FriendResponse>> {
+    ) : ResponseEntity<List<UserResponse>> {
         val friends = friendshipService.getFriendList(userId)
         return ResponseEntity.ok(friends)
     }

@@ -1,6 +1,7 @@
 package org.itm.ontime.presentation.friendship.response
 
 import io.swagger.v3.oas.annotations.media.Schema
+import org.itm.ontime.presentation.user.response.UserResponse
 import java.time.LocalDateTime
 import java.util.*
 
@@ -10,7 +11,7 @@ data class FriendRequestResponse(
     val friendshipId: UUID,
 
     @Schema(description = "Information about the requester")
-    val requester: FriendResponse,
+    val requester: UserResponse,
 
     @Schema(description = "When the friend request was created", example = "2024-01-01T12:00:00")
     val createdAt: LocalDateTime
@@ -19,7 +20,7 @@ data class FriendRequestResponse(
         @JvmStatic
         fun of(
             friendshipId: UUID,
-            requester: FriendResponse,
+            requester: UserResponse,
             createdAt: LocalDateTime
         ): FriendRequestResponse {
             return FriendRequestResponse(friendshipId, requester, createdAt)

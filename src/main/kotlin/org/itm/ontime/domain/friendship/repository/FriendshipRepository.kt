@@ -5,11 +5,12 @@ import org.itm.ontime.domain.friendship.entity.FriendshipStatus
 import org.itm.ontime.domain.user.entity.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import java.util.UUID
+import java.util.*
 
 interface FriendshipRepository : JpaRepository<Friendship, UUID>{
     fun findByRequesterAndReceiver(requester: User, receiver: User): Friendship?
     fun findByReceiverAndStatus(receiver: User, status: FriendshipStatus): List<Friendship>
+    fun existsByRequesterAndReceiverAndStatus(requester: User ,receiver: User, status: FriendshipStatus): Boolean
 
     @Query("""
         SELECT f FROM Friendship f 

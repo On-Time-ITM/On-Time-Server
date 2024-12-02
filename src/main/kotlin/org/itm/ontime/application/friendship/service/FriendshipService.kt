@@ -7,14 +7,13 @@ import org.itm.ontime.domain.friendship.entity.FriendshipStatus
 import org.itm.ontime.domain.friendship.repository.FriendshipRepository
 import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.domain.user.repository.UserRepository
-import org.itm.ontime.presentation.friendship.request.FriendshipAcceptRequest
-import org.itm.ontime.presentation.friendship.request.FriendshipDeleteRequest
-import org.itm.ontime.presentation.friendship.request.FriendshipRequest
+import org.itm.ontime.presentation.friendship.request.AcceptFriendshipRequest
+import org.itm.ontime.presentation.friendship.request.DeleteFriendshipRequest
+import org.itm.ontime.presentation.friendship.request.SendFriendshipRequest
 import org.itm.ontime.presentation.friendship.response.FriendRequestResponse
-import org.itm.ontime.presentation.friendship.response.FriendResponse
-import org.itm.ontime.presentation.user.request.UserSearchRequest
-import org.itm.ontime.presentation.user.response.UserSearchResponse
+import org.itm.ontime.presentation.user.response.UserResponse
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
@@ -22,18 +21,19 @@ class FriendshipService (
     private val userRepository: UserRepository,
     private val friendshipRepository: FriendshipRepository
 ){
-    fun searchFriendByPhoneNumber(request: UserSearchRequest) : UserSearchResponse {
-        val user = userRepository.findByPhoneNumber(request.phoneNumber)
-            ?: throw UserNotFoundException.fromPhoneNumber(request.phoneNumber)
+    @Transactional(readOnly = true)
+    fun searchFriendByPhoneNumber(phoneNumber: String) : UserResponse {
+        val user = userRepository.findByPhoneNumber(phoneNumber)
+            ?: throw UserNotFoundException.fromPhoneNumber(phoneNumber)
 
-        return UserSearchResponse.of(
+        return UserResponse.of(
             id = user.id,
             name = user.name,
             phoneNumber = user.phoneNumber
         )
     }
 
-    fun sendFriendRequest(request: FriendshipRequest) : UUID {
+    fun sendFriendRequest(request: SendFriendshipRequest) : UUID {
         val requester = userRepository.findById(request.requesterId)
             .orElseThrow{ UserNotFoundException.fromId(request.requesterId) }
 
@@ -45,41 +45,45 @@ class FriendshipService (
         }
 
         if (isValidateRequest(requester, receiver, FriendshipStatus.PENDING)) {
-            throw DuplicateFriendRequestException(requester.id, receiver.id)
+            throw AlreadyExistsFriendRequestException(requester.id, receiver.id)
         }
 
         val friendship = Friendship(requester, receiver)
-        requester.sentFriendRequests.add(friendship)
-        receiver.receivedFriendRequests.add(friendship)
-
         friendshipRepository.save(friendship)
+
+        requester.sentFriendships.add(friendship)
+        receiver.receivedFriendships.add(friendship)
+
         return friendship.id
     }
 
-    private fun isValidateRequest(requester: User, receiver: User, status: FriendshipStatus = FriendshipStatus.ACCEPTED) =
-        requester.sentFriendRequests.any { it.receiver.id == receiver.id && it.status == status } ||
-                requester.receivedFriendRequests.any { it.requester.id == receiver.id && it.status == status }
+    private fun isValidateRequest(
+        requester: User, receiver: User,
+        status: FriendshipStatus = FriendshipStatus.ACCEPTED
+    ) = requester.sentFriendships.any { it.receiver.id == receiver.id && it.status == status } ||
+                requester.receivedFriendships.any { it.requester.id == receiver.id && it.status == status }
 
-    fun acceptFriendRequest(request: FriendshipAcceptRequest) : UUID {
+    @Transactional
+    fun acceptFriendRequest(request: AcceptFriendshipRequest) : UUID {
         val friendship = getValidFriendship(request)
         friendship.accept()
 
-        friendshipRepository.save(friendship)
         return friendship.id
     }
 
-    fun rejectFriendRequest(request: FriendshipAcceptRequest) : UUID {
+    @Transactional
+    fun rejectFriendRequest(request: AcceptFriendshipRequest) : UUID {
         val friendship = getValidFriendship(request)
 
         friendshipRepository.delete(friendship)
         return friendship.id
     }
 
-    private fun getValidFriendship(request: FriendshipAcceptRequest) : Friendship {
+    private fun getValidFriendship(request: AcceptFriendshipRequest) : Friendship {
         val receiver = userRepository.findById(request.receiverId)
             .orElseThrow { UserNotFoundException.fromId(request.receiverId) }
 
-        val friendship = receiver.receivedFriendRequests.find { it.id == request.friendshipId }
+        val friendship = receiver.receivedFriendships.find { it.id == request.friendshipId }
             ?: throw FriendshipNotFoundException.fromId(request.friendshipId)
 
         if (friendship.status != FriendshipStatus.PENDING) {
@@ -89,7 +93,7 @@ class FriendshipService (
         return friendship
     }
 
-    fun deleteFriend(request: FriendshipDeleteRequest) : UUID {
+    fun deleteFriend(request: DeleteFriendshipRequest) : UUID {
         if (request.userId == request.friendId) {
             throw SelfFriendRequestException(request.userId)
         }
@@ -109,7 +113,7 @@ class FriendshipService (
         return friendship.id
     }
 
-    fun getFriendList(userId: UUID) : List<FriendResponse> {
+    fun getFriendList(userId: UUID) : List<UserResponse> {
         val user = userRepository.findById(userId)
             .orElseThrow { UserNotFoundException.fromId(userId) }
 
@@ -121,11 +125,10 @@ class FriendshipService (
                     friendship.requester
                 }
 
-                FriendResponse.of(
-                    friend.id,
-                    friend.phoneNumber,
-                    friend.name,
-                    friend.tardinessRate
+                UserResponse.of(
+                    id = friend.id,
+                    name = friend.name,
+                    phoneNumber = friend.phoneNumber
                 )
             }
     }
@@ -138,11 +141,10 @@ class FriendshipService (
             .map { friendship ->
                 FriendRequestResponse.of(
                     friendshipId = friendship.id,
-                    requester = FriendResponse.of(
+                    requester = UserResponse.of(
                         id = friendship.requester.id,
-                        phoneNumber = friendship.requester.phoneNumber,
                         name = friendship.requester.name,
-                        tardinessRate = friendship.requester.tardinessRate
+                        phoneNumber = friendship.requester.phoneNumber
                     ),
                     createdAt = friendship.createdDate
                 )
