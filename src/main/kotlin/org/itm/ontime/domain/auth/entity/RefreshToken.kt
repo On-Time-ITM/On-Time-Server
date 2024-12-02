@@ -13,7 +13,7 @@ import java.util.*
     name = "refresh_token",
     uniqueConstraints = [
         UniqueConstraint(
-            name = "uk_refresh_tokens_user_id",
+            name = "idx_refresh_tokens_user_id",
             columnNames = ["user_id"]
         )
     ]
@@ -26,8 +26,6 @@ class RefreshToken(
     var token: String,
 
     @Column(nullable = false)
-    var expiresAt: LocalDateTime = LocalDateTime.now().plusDays(14),
+    var expiresAt: Date = Date.from(LocalDateTime.now().plusDays(30).toInstant(null)),
 
-) : BaseEntity() {
-    fun isExpired(): Boolean = LocalDateTime.now().isAfter(expiresAt)
-}
+    ) : BaseEntity()
