@@ -1,4 +1,4 @@
-package org.itm.ontime.presentation.meeting.request
+package org.itm.ontime.presentation.meeting.request.meeting
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank

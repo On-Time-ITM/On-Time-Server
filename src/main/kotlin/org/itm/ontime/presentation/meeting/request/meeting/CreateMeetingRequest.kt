@@ -1,8 +1,8 @@
-package org.itm.ontime.presentation.meeting.request
+package org.itm.ontime.presentation.meeting.request.meeting
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.*
-import org.itm.ontime.domain.location.entity.Location
+import org.itm.ontime.domain.meeting.entity.location.Location
 import org.itm.ontime.domain.payment.entity.AccountInfo
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -56,12 +56,12 @@ data class CreateMeetingRequest(
         example = "[\"123e4567-e89b-12d3-a456-426614174000\", \"987fcdeb-51d2-3456-bcde-789012345678\"]"
     )
     @field:NotEmpty
-    val participantIds: MutableList<UUID>,
+    val participantIds: List<UUID>,
 
-    @Schema(
-        description = "Profile image request",
-        example = "{\"prompt\": \"A photo of mobile programming meeting\", \"size\": \"1024x1024\"}"
-    )
-    @field:NotNull
-    val profileImageRequest: ProfileImageRequest
+//    @Schema(
+//        description = "Profile image request",
+//        example = "{\"prompt\": \"A photo of mobile programming meeting\", \"size\": \"1024x1024\"}"
+//    )
+//    @field:NotNull
+//    val profileImageRequest: ProfileImageRequest
 )

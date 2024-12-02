@@ -1,9 +1,7 @@
-package org.itm.ontime.domain.meeting.entity
+package org.itm.ontime.domain.meeting.entity.meeting
 
 import jakarta.persistence.*
-import org.itm.ontime.domain.attendance.entity.Attendance
-import org.itm.ontime.domain.location.entity.Location
-import org.itm.ontime.domain.location.entity.UserLocation
+import org.itm.ontime.domain.meeting.entity.location.Location
 import org.itm.ontime.domain.payment.entity.AccountInfo
 import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.global.entity.BaseEntity
@@ -34,25 +32,30 @@ class Meeting(
     val host: User,
 
     @OneToMany(mappedBy = "meeting", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val participants: MutableList<User> = mutableListOf(),
-
-    @OneToMany(mappedBy = "meeting", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val userLocations : MutableList<UserLocation> = mutableListOf(),
-
-    @OneToMany(mappedBy = "meeting")
-    val attendances: MutableList<Attendance> = mutableListOf(),
+    val participants: MutableList<MeetingParticipant> = mutableListOf(),
+//
+//    @OneToMany(mappedBy = "meeting", cascade = [CascadeType.ALL], orphanRemoval = true)
+//    val userLocations : MutableList<UserLocation> = mutableListOf(),
+//
+//    @OneToMany(mappedBy = "meeting")
+//    val attendances: MutableList<Attendance> = mutableListOf(),
 
     @Column(nullable = true) var qrCode: String ?= null,
 
-    @Column(nullable = false)
-    @JoinColumn(name = "profile_image_id") val profileImage: ProfileImage
+//    @Embedded
+//    @Column(nullable = false)
+//    @JoinColumn(name = "profile_image_id") val profileImage: ProfileImage
 
 ) : BaseEntity() {
-    fun addUserLocation(userLocation: UserLocation) {
-        userLocations.add(userLocation)
-        userLocation.meeting = this
+    fun addParticipant(participant: MeetingParticipant) {
+        participants.add(participant)
+        participant.meeting = this
     }
-
+//    fun addUserLocation(userLocation: UserLocation) {
+//        userLocations.add(userLocation)
+//        userLocation.meeting = this
+//    }
+//
     fun addQRCode(qrCode: String) {
         this.qrCode = qrCode
     }

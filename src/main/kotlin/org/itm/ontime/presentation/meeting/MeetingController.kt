@@ -7,15 +7,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.itm.ontime.application.meeting.service.MeetingService
-import org.itm.ontime.presentation.meeting.request.CreateMeetingRequest
-import org.itm.ontime.presentation.meeting.request.DeleteMeetingRequest
+import org.itm.ontime.presentation.meeting.request.meeting.CreateMeetingRequest
+import org.itm.ontime.presentation.meeting.request.meeting.DeleteMeetingRequest
 import org.itm.ontime.presentation.meeting.response.MeetingResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/meeting")
+@RequestMapping("api/v1/meeting")
 @Tag(name = "Meeting", description = "Meeting management APIs")
 class MeetingController(
     private val meetingService: MeetingService
