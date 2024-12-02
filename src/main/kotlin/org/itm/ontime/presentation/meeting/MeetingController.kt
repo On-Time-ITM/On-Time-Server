@@ -1,7 +1,6 @@
 package org.itm.ontime.presentation.meeting
 
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -45,7 +44,10 @@ class MeetingController(
         return ResponseEntity.ok(meetings)
     }
 
-    @Schema(description = "Get meeting")
+    @Operation(
+        summary = "Get a meeting",
+        description = "Get details of a specific meeting"
+    )
     @ApiResponses(value = [
         ApiResponse(
             responseCode = "200",
@@ -66,7 +68,10 @@ class MeetingController(
         return ResponseEntity.ok(meeting)
     }
 
-    @Schema(description = "Create meeting")
+    @Operation(
+        summary = "Create meeting",
+        description = "Create a new meeting"
+    )
     @ApiResponses(value = [
         ApiResponse(
             responseCode = "200",
@@ -83,7 +88,10 @@ class MeetingController(
         return ResponseEntity.ok(meetingId)
     }
 
-    @Schema(description = "Delete meeting")
+    @Operation(
+        summary = "Delete meeting",
+        description = "Delete a meeting"
+    )
     @ApiResponses(value = [
         ApiResponse(
             responseCode = "200",
