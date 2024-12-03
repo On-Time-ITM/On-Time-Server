@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.itm.ontime.application.meeting.service.QRCodeService
 import org.itm.ontime.presentation.meeting.request.QRCodeRequest
-import org.itm.ontime.presentation.meeting.response.QRCodeResponse
+import org.itm.ontime.presentation.meeting.response.qrCode.QRCodeResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*

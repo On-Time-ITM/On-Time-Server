@@ -6,7 +6,7 @@ import org.itm.ontime.application.meeting.exception.QRCodeNotFoundException
 import org.itm.ontime.domain.meeting.repository.MeetingRepository
 import org.itm.ontime.infrastructure.external.qrCode.QRCodeClient
 import org.itm.ontime.presentation.meeting.request.QRCodeRequest
-import org.itm.ontime.presentation.meeting.response.QRCodeResponse
+import org.itm.ontime.presentation.meeting.response.qrCode.QRCodeResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
