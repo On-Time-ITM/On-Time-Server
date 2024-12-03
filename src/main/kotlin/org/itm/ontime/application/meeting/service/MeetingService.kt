@@ -1,6 +1,7 @@
 package org.itm.ontime.application.meeting.service
 
 
+import org.itm.ontime.application.meeting.exception.ImageNotFoundException
 import org.itm.ontime.application.meeting.exception.MeetingNotFoundException
 import org.itm.ontime.application.meeting.exception.NonFriendInviteException
 import org.itm.ontime.application.meeting.exception.NotMeetingHostException
@@ -11,11 +12,12 @@ import org.itm.ontime.domain.meeting.entity.meeting.Meeting
 import org.itm.ontime.domain.meeting.entity.meeting.MeetingParticipant
 import org.itm.ontime.domain.meeting.repository.MeetingParticipantRepository
 import org.itm.ontime.domain.meeting.repository.MeetingRepository
+import org.itm.ontime.domain.meeting.repository.ProfileImageRepository
 import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.domain.user.repository.UserRepository
 import org.itm.ontime.presentation.meeting.request.meeting.CreateMeetingRequest
 import org.itm.ontime.presentation.meeting.request.meeting.DeleteMeetingRequest
-import org.itm.ontime.presentation.meeting.response.MeetingResponse
+import org.itm.ontime.presentation.meeting.response.meeting.MeetingResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -26,7 +28,7 @@ class MeetingService(
     private val meetingParticipantRepository: MeetingParticipantRepository,
     private val userRepository: UserRepository,
     private val friendshipRepository: FriendshipRepository,
-//    private val profileImageService: ProfileImageService,
+    private val profileImageRepository: ProfileImageRepository,
 
 ) {
     @Transactional(readOnly = true)
@@ -57,7 +59,8 @@ class MeetingService(
         validateFriendships(host, participants)
         participants.add(host)
 
-//        val profileImage = profileImageService.createProfileImage(request)
+        val profileImage = profileImageRepository.findById(request.profileImageId)
+            .orElseThrow{ ImageNotFoundException(request.profileImageId) }
 
         val meeting = Meeting(
             name = request.name,
@@ -66,7 +69,7 @@ class MeetingService(
             lateFee = request.lateFee,
             accountInfo = request.accountInfo,
             host = host,
-//            profileImage = profileImage
+            profileImage = profileImage
         )
         meetingRepository.save(meeting)
 
@@ -125,4 +128,5 @@ class MeetingService(
         meetingRepository.deleteById(meeting.id)
         return meeting.id
     }
+
 }

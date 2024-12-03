@@ -58,10 +58,10 @@ data class CreateMeetingRequest(
     @field:NotEmpty
     val participantIds: List<UUID>,
 
-//    @Schema(
-//        description = "Profile image request",
-//        example = "{\"prompt\": \"A photo of mobile programming meeting\", \"size\": \"1024x1024\"}"
-//    )
-//    @field:NotNull
-//    val profileImageRequest: ProfileImageRequest
+    @Schema(
+        description = "Profile image ID",
+        example = "123e4567-e89b-12d3-a456-426614174000"
+    )
+    @field:NotBlank
+    val profileImageId: UUID
 )

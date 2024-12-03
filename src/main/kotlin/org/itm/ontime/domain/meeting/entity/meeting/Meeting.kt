@@ -2,6 +2,7 @@ package org.itm.ontime.domain.meeting.entity.meeting
 
 import jakarta.persistence.*
 import org.itm.ontime.domain.meeting.entity.location.Location
+import org.itm.ontime.domain.meeting.entity.profileImage.ProfileImage
 import org.itm.ontime.domain.payment.entity.AccountInfo
 import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.global.entity.BaseEntity
@@ -42,9 +43,9 @@ class Meeting(
 
     @Column(nullable = true) var qrCode: String ?= null,
 
-//    @Embedded
-//    @Column(nullable = false)
-//    @JoinColumn(name = "profile_image_id") val profileImage: ProfileImage
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_image_id")
+    val profileImage: ProfileImage
 
 ) : BaseEntity() {
     fun addParticipant(participant: MeetingParticipant) {

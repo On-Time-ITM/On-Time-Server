@@ -8,7 +8,7 @@ import jakarta.validation.Valid
 import org.itm.ontime.application.meeting.service.MeetingService
 import org.itm.ontime.presentation.meeting.request.meeting.CreateMeetingRequest
 import org.itm.ontime.presentation.meeting.request.meeting.DeleteMeetingRequest
-import org.itm.ontime.presentation.meeting.response.MeetingResponse
+import org.itm.ontime.presentation.meeting.response.meeting.MeetingResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
