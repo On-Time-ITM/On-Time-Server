@@ -51,6 +51,14 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    implementation("com.aallam.openai:openai-client:3.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.7.3")
+    implementation("io.ktor:ktor-client-cio:2.3.2")
+    implementation("org.springframework:spring-webflux")
+    implementation("io.projectreactor.netty:reactor-netty")
+
 }
 
 dependencyManagement {
