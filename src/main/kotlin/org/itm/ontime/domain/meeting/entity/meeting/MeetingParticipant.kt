@@ -19,11 +19,11 @@ class MeetingParticipant(
 //    @Column(nullable = false)
 //    @JoinColumn(name = "attendance_id")
 //    var attendance: Attendance,
-
-    @Column(nullable = false)
-    var paymentStatus: PaymentStatus = PaymentStatus.NOT_REQUIRED
+//
+//    @Column(nullable = false)
+//    var paymentStatus: PaymentStatus = PaymentStatus.NOT_REQUIRED
 ) : BaseEntity(){
-    fun payLateFee() {
-        paymentStatus = PaymentStatus.PAID
-    }
+//    fun payLateFee() {
+//        paymentStatus = PaymentStatus.PAID
+//    }
 }

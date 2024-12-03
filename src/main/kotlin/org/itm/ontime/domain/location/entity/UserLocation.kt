@@ -1,7 +1,7 @@
 package org.itm.ontime.domain.location.entity
 
 import jakarta.persistence.*
-import org.itm.ontime.domain.meeting.entity.Meeting
+import org.itm.ontime.domain.meeting.entity.meeting.Meeting
 import org.itm.ontime.domain.user.entity.User
 import org.itm.ontime.global.entity.BaseEntity
 
@@ -24,7 +24,7 @@ class UserLocation private constructor(
     companion object {
         fun create(user: User, meeting: Meeting, location: Location): UserLocation {
             val userLocation = UserLocation(user, meeting, location)
-            meeting.addUserLocation(userLocation)
+//            meeting.addUserLocation(userLocation)
             return userLocation
         }
     }
