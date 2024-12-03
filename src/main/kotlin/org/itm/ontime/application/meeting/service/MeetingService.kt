@@ -65,7 +65,7 @@ class MeetingService(
         val meeting = Meeting(
             name = request.name,
             meetingDateTime = request.meetingDateTime,
-            location = request.location,
+//            location = request.location,
             lateFee = request.lateFee,
             accountInfo = request.accountInfo,
             host = host,

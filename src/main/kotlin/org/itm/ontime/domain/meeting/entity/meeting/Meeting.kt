@@ -1,7 +1,6 @@
 package org.itm.ontime.domain.meeting.entity.meeting
 
 import jakarta.persistence.*
-import org.itm.ontime.domain.meeting.entity.location.Location
 import org.itm.ontime.domain.meeting.entity.profileImage.ProfileImage
 import org.itm.ontime.domain.payment.entity.AccountInfo
 import org.itm.ontime.domain.user.entity.User
@@ -19,8 +18,8 @@ class Meeting(
     @Column(nullable = false)
     val meetingDateTime: LocalDateTime,
 
-    @Column(nullable = false)
-    val location: Location,
+//    @Column(nullable = false)
+//    val location: Location,
 
     @Column(nullable = false)
     val lateFee: BigDecimal,

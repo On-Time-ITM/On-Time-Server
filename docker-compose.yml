@@ -3,14 +3,12 @@ version: '3'
 services:
   mysql:
     image: mysql:8.0
-    container_name: ontime-mysql
+    container_name: test-ontime-mysql
     ports:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - TZ=${TZ}
     command:
       - --character-set-server=utf8mb4

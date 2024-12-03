@@ -2,9 +2,9 @@ package org.itm.ontime.presentation.meeting.response.meeting
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
-import org.itm.ontime.domain.meeting.entity.location.Location
 import org.itm.ontime.domain.meeting.entity.meeting.Meeting
 import org.itm.ontime.domain.payment.entity.AccountInfo
+import org.itm.ontime.presentation.meeting.response.profileImage.ProfileImageResponse
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
@@ -32,9 +32,9 @@ data class MeetingResponse(
     @field:NotBlank
     val meetingDateTime: LocalDateTime,
 
-    @Schema(description = "Meeting location")
-    @field:NotBlank
-    val location: Location,
+//    @Schema(description = "Meeting location")
+//    @field:NotBlank
+//    val location: Location,
 
     @Schema(
         description = "Late fee amount",
@@ -52,7 +52,7 @@ data class MeetingResponse(
 
     // TODO : attendance
 
-//    val profileImage: ProfileImageResponse
+    val profileImage: ProfileImageResponse
 
 ) {
     companion object {
@@ -61,14 +61,10 @@ data class MeetingResponse(
             meeting.id,
             meeting.name,
             meeting.meetingDateTime,
-            meeting.location,
+//            meeting.location,
             meeting.lateFee,
             meeting.accountInfo,
-//            ProfileImageResponse.of(
-//                meeting.profileImage.id,
-//                meeting.profileImage.prompt,
-//                meeting.profileImage.size
-//            )
+            ProfileImageResponse.of(meeting.profileImage)
         )
 
         fun of(meetings: List<Meeting>): List<MeetingResponse> =

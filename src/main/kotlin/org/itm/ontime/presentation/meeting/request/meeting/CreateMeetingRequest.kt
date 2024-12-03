@@ -2,7 +2,6 @@ package org.itm.ontime.presentation.meeting.request.meeting
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.*
-import org.itm.ontime.domain.meeting.entity.location.Location
 import org.itm.ontime.domain.payment.entity.AccountInfo
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -25,9 +24,9 @@ data class CreateMeetingRequest(
     @field:Future
     val meetingDateTime: LocalDateTime,
 
-    @Schema(description = "Meeting location")
-    @field:NotNull
-    val location: Location,
+//    @Schema(description = "Meeting location")
+//    @field:NotNull
+//    val location: Location,
 
     @Schema(
         description = "Late fee amount",
