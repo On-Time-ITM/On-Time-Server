@@ -13,12 +13,8 @@ data class AuthResponse(
 ) {
     companion object {
         @JvmStatic
-        fun of(
-            userInfo: UserResponse,
-            tokenInfo: TokenInfo
-        ): AuthResponse {
-            return AuthResponse(userInfo, tokenInfo)
-        }
+        fun of(userInfo: UserResponse, tokenInfo: TokenInfo) =
+            AuthResponse(userInfo, tokenInfo)
     }
 
 }

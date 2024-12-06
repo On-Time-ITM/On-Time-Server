@@ -19,12 +19,11 @@ data class FriendRequestResponse(
 ) {
     companion object {
         @JvmStatic
-        fun of(friendship: Friendship): FriendRequestResponse {
-            return FriendRequestResponse(
+        fun of(friendship: Friendship) =
+            FriendRequestResponse(
                 friendshipId = friendship.id,
                 requester = UserResponse.of(friendship.requester),
                 createdAt = friendship.createdDate
             )
-        }
     }
 }

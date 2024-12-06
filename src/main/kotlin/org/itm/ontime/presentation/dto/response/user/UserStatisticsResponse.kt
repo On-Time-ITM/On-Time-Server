@@ -11,9 +11,8 @@ data class UserStatisticsResponse(
     val statisticsInfo: UserStatisticsInfo
 ) {
     companion object {
-        fun of(
-            userId: UUID,
-            statisticsInfo: UserStatisticsInfo
-        ) = UserStatisticsResponse(userId, statisticsInfo)
+        @JvmStatic
+        fun of(userId: UUID, statisticsInfo: UserStatisticsInfo) =
+            UserStatisticsResponse(userId, statisticsInfo)
     }
 }

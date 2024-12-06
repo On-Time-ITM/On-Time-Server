@@ -55,17 +55,17 @@ data class MeetingResponse(
 ) {
     companion object {
         @JvmStatic
-        fun of(meeting: Meeting) = MeetingResponse(
-            meeting.id,
-            meeting.name,
-            meeting.meetingDateTime,
-            meeting.location,
-            meeting.lateFee,
-            meeting.accountInfo,
-            meeting.profileImage
-        )
+        fun of(meeting: Meeting) =
+            MeetingResponse(
+                meeting.id,
+                meeting.name,
+                meeting.meetingDateTime,
+                meeting.location,
+                meeting.lateFee,
+                meeting.accountInfo,
+                meeting.profileImage
+            )
 
-        fun of(meetings: List<Meeting>): List<MeetingResponse> =
-            meetings.map(Companion::of)
+        fun of(meetings: List<Meeting>): List<MeetingResponse> = meetings.map(Companion::of)
     }
 }

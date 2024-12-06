@@ -32,7 +32,8 @@ data class UserResponse(
 ) {
     companion object {
         @JvmStatic
-        fun of(user: User): UserResponse = UserResponse(
+        fun of(user: User): UserResponse =
+            UserResponse(
                 id = user.id,
                 name = user.name,
                 phoneNumber = user.phoneNumber,
