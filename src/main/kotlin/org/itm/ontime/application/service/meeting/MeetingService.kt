@@ -1,23 +1,21 @@
-package org.itm.ontime.application.meeting.service
+package org.itm.ontime.application.service.meeting
 
 
-import org.itm.ontime.application.meeting.exception.ImageNotFoundException
-import org.itm.ontime.application.meeting.exception.MeetingNotFoundException
-import org.itm.ontime.application.meeting.exception.NonFriendInviteException
-import org.itm.ontime.application.meeting.exception.NotMeetingHostException
-import org.itm.ontime.application.user.exception.UserNotFoundException
-import org.itm.ontime.domain.friendship.entity.FriendshipStatus
-import org.itm.ontime.domain.friendship.repository.FriendshipRepository
-import org.itm.ontime.domain.meeting.entity.meeting.Meeting
-import org.itm.ontime.domain.meeting.entity.meeting.MeetingParticipant
-import org.itm.ontime.domain.meeting.repository.MeetingParticipantRepository
-import org.itm.ontime.domain.meeting.repository.MeetingRepository
-import org.itm.ontime.domain.meeting.repository.ProfileImageRepository
-import org.itm.ontime.domain.user.entity.User
-import org.itm.ontime.domain.user.repository.UserRepository
-import org.itm.ontime.presentation.meeting.request.meeting.CreateMeetingRequest
-import org.itm.ontime.presentation.meeting.request.meeting.DeleteMeetingRequest
-import org.itm.ontime.presentation.meeting.response.meeting.MeetingResponse
+import org.itm.ontime.application.exception.meeting.MeetingNotFoundException
+import org.itm.ontime.application.exception.meeting.NonFriendInviteException
+import org.itm.ontime.application.exception.meeting.NotMeetingHostException
+import org.itm.ontime.application.exception.user.UserNotFoundException
+import org.itm.ontime.domain.friendship.FriendshipStatus
+import org.itm.ontime.domain.meeting.Meeting
+import org.itm.ontime.domain.participant.Participant
+import org.itm.ontime.domain.user.User
+import org.itm.ontime.infrastructure.repository.friendship.FriendshipRepository
+import org.itm.ontime.infrastructure.repository.meeting.MeetingRepository
+import org.itm.ontime.infrastructure.repository.participant.ParticipantRepository
+import org.itm.ontime.infrastructure.repository.user.UserRepository
+import org.itm.ontime.presentation.dto.request.meeting.CreateMeetingRequest
+import org.itm.ontime.presentation.dto.request.meeting.DeleteMeetingRequest
+import org.itm.ontime.presentation.dto.response.meeting.MeetingResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -25,12 +23,11 @@ import java.util.*
 @Service
 class MeetingService(
     private val meetingRepository: MeetingRepository,
-    private val meetingParticipantRepository: MeetingParticipantRepository,
+    private val participantRepository: ParticipantRepository,
     private val userRepository: UserRepository,
-    private val friendshipRepository: FriendshipRepository,
-    private val profileImageRepository: ProfileImageRepository,
+    private val friendshipRepository: FriendshipRepository
 
-) {
+    ) {
     @Transactional(readOnly = true)
     fun getMeeting(meetingId: UUID) : MeetingResponse {
         val meeting = meetingRepository.findById(meetingId)
@@ -40,12 +37,12 @@ class MeetingService(
     }
 
     @Transactional(readOnly = true)
-    fun getMeetingList(userId: UUID) : List<MeetingResponse> {
+    fun getMeetings(userId: UUID) : List<MeetingResponse> {
         val user = userRepository.findById(userId)
             .orElseThrow{ UserNotFoundException.fromId(userId) }
 
         return MeetingResponse.of(
-            meetingRepository.findAllByParticipantsParticipantId(user.id)
+            meetingRepository.findAllByParticipantId(user.id)
         )
     }
 
@@ -59,28 +56,23 @@ class MeetingService(
         validateFriendships(host, participants)
         participants.add(host)
 
-        val profileImage = profileImageRepository.findById(request.profileImageId)
-            .orElseThrow{ ImageNotFoundException(request.profileImageId) }
-
         val meeting = Meeting(
             name = request.name,
             meetingDateTime = request.meetingDateTime,
-//            location = request.location,
+            location = request.location,
             lateFee = request.lateFee,
             accountInfo = request.accountInfo,
             host = host,
-            profileImage = profileImage
+            profileImage = request.profileImage
         )
         meetingRepository.save(meeting)
 
         participants.forEach { participant ->
-            MeetingParticipant(
+            Participant(
                 meeting = meeting,
-                participant = participant,
-//                attendance = Attendance()
-
+                participant = participant
             ).also {
-                meetingParticipantRepository.save(it)
+                participantRepository.save(it)
                 meeting.participants.add(it)
             }
         }
