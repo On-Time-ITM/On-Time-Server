@@ -1,17 +1,17 @@
-package org.itm.ontime.application.friendship.service
+package org.itm.ontime.application.service.friendship
 
-import org.itm.ontime.application.friendship.exception.*
-import org.itm.ontime.application.user.exception.UserNotFoundException
-import org.itm.ontime.domain.friendship.entity.Friendship
-import org.itm.ontime.domain.friendship.entity.FriendshipStatus
-import org.itm.ontime.domain.friendship.repository.FriendshipRepository
-import org.itm.ontime.domain.user.entity.User
-import org.itm.ontime.domain.user.repository.UserRepository
-import org.itm.ontime.presentation.friendship.request.AcceptFriendshipRequest
-import org.itm.ontime.presentation.friendship.request.DeleteFriendshipRequest
-import org.itm.ontime.presentation.friendship.request.SendFriendshipRequest
-import org.itm.ontime.presentation.friendship.response.FriendRequestResponse
-import org.itm.ontime.presentation.user.response.UserResponse
+import org.itm.ontime.application.exception.friendship.*
+import org.itm.ontime.application.exception.user.UserNotFoundException
+import org.itm.ontime.domain.friendship.Friendship
+import org.itm.ontime.domain.friendship.FriendshipStatus
+import org.itm.ontime.domain.user.User
+import org.itm.ontime.infrastructure.repository.friendship.FriendshipRepository
+import org.itm.ontime.infrastructure.repository.user.UserRepository
+import org.itm.ontime.presentation.dto.request.friendship.AcceptFriendshipRequest
+import org.itm.ontime.presentation.dto.request.friendship.DeleteFriendshipRequest
+import org.itm.ontime.presentation.dto.request.friendship.SendFriendshipRequest
+import org.itm.ontime.presentation.dto.response.friendship.FriendRequestResponse
+import org.itm.ontime.presentation.dto.response.user.UserResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -26,11 +26,7 @@ class FriendshipService (
         val user = userRepository.findByPhoneNumber(phoneNumber)
             ?: throw UserNotFoundException.fromPhoneNumber(phoneNumber)
 
-        return UserResponse.of(
-            id = user.id,
-            name = user.name,
-            phoneNumber = user.phoneNumber
-        )
+        return UserResponse.of(user)
     }
 
     fun sendFriendRequest(request: SendFriendshipRequest) : UUID {
@@ -58,10 +54,14 @@ class FriendshipService (
     }
 
     private fun isValidateRequest(
-        requester: User, receiver: User,
+        requester: User,
+        receiver: User,
         status: FriendshipStatus = FriendshipStatus.ACCEPTED
-    ) = requester.sentFriendships.any { it.receiver.id == receiver.id && it.status == status } ||
-                requester.receivedFriendships.any { it.requester.id == receiver.id && it.status == status }
+    ) = requester.sentFriendships.any { friendship ->
+        friendship.receiver.id == receiver.id && friendship.status == status
+    } || requester.receivedFriendships.any { friendship ->
+        friendship.requester.id == receiver.id && friendship.status == status
+    }
 
     @Transactional
     fun acceptFriendRequest(request: AcceptFriendshipRequest) : UUID {
@@ -118,18 +118,14 @@ class FriendshipService (
             .orElseThrow { UserNotFoundException.fromId(userId) }
 
         return friendshipRepository.findAllAcceptedFriendships(user)
-            .map { friendship ->
-                val friend = if (friendship.requester.id == userId) {
-                    friendship.receiver
+            .map {
+                val friend = if (it.requester.id == userId) {
+                    it.receiver
                 } else {
-                    friendship.requester
+                    it.requester
                 }
 
-                UserResponse.of(
-                    id = friend.id,
-                    name = friend.name,
-                    phoneNumber = friend.phoneNumber
-                )
+                UserResponse.of(friend)
             }
     }
 
@@ -138,16 +134,6 @@ class FriendshipService (
             .orElseThrow { UserNotFoundException.fromId(userId) }
 
         return friendshipRepository.findByReceiverAndStatus(receiver, FriendshipStatus.PENDING)
-            .map { friendship ->
-                FriendRequestResponse.of(
-                    friendshipId = friendship.id,
-                    requester = UserResponse.of(
-                        id = friendship.requester.id,
-                        name = friendship.requester.name,
-                        phoneNumber = friendship.requester.phoneNumber
-                    ),
-                    createdAt = friendship.createdDate
-                )
-            }
+            .map { FriendRequestResponse.of(it) }
     }
 }
