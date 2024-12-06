@@ -1,7 +1,7 @@
-package org.itm.ontime.presentation.user.response
+package org.itm.ontime.presentation.dto.response.user
 
 import io.swagger.v3.oas.annotations.media.Schema
-import jakarta.validation.constraints.NotBlank
+import org.itm.ontime.domain.user.User
 import java.util.*
 
 @Schema(description = "Response for user search")
@@ -10,31 +10,33 @@ data class UserResponse(
         description = "User ID",
         example = "123e4567-e89b-12d3-a456-426614174000"
     )
-    @field:NotBlank
     val id: UUID,
 
     @Schema(
         description = "User name",
         example = "Saeyeon Lim"
     )
-    @field:NotBlank
     val name: String,
 
     @Schema(
         description = "Phone number",
         example = "010-1234-5678"
     )
-    @field:NotBlank
-    val phoneNumber: String
+    val phoneNumber: String,
+
+    @Schema(
+        description = "User statistics",
+        example = "UserStatisticsResponse"
+    )
+    val statistics: UserStatisticsInfo
 ) {
     companion object {
         @JvmStatic
-        fun of(
-            id: UUID,
-            name: String,
-            phoneNumber: String
-        ): UserResponse {
-            return UserResponse(id, name, phoneNumber)
-        }
+        fun of(user: User): UserResponse = UserResponse(
+                id = user.id,
+                name = user.name,
+                phoneNumber = user.phoneNumber,
+                statistics = UserStatisticsInfo.of(user.statistics)
+            )
     }
 }
