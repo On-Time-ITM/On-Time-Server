@@ -1,6 +1,6 @@
-package org.itm.ontime.application.user.exception
+package org.itm.ontime.application.exception.user
 
-import org.itm.ontime.global.error.ErrorCode
+import org.itm.ontime.application.exception.common.ErrorCode
 import org.springframework.http.HttpStatus
 
 enum class UserErrorCode(
@@ -9,4 +9,5 @@ enum class UserErrorCode(
     override val message: String
 ) : ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "User not found"),
+    USER_STATISTICS_NOT_FOUND(HttpStatus.NOT_FOUND, "US001", "User statistics not found"),
 }
