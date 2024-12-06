@@ -1,8 +1,9 @@
-package org.itm.ontime.presentation.meeting.request.meeting
+package org.itm.ontime.presentation.dto.request.meeting
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.*
-import org.itm.ontime.domain.payment.entity.AccountInfo
+import org.itm.ontime.domain.common.AccountInfo
+import org.itm.ontime.domain.common.Location
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
@@ -24,9 +25,9 @@ data class CreateMeetingRequest(
     @field:Future
     val meetingDateTime: LocalDateTime,
 
-//    @Schema(description = "Meeting location")
-//    @field:NotNull
-//    val location: Location,
+    @Schema(description = "Meeting location")
+    @field:NotNull
+    val location: Location,
 
     @Schema(
         description = "Late fee amount",
@@ -58,9 +59,9 @@ data class CreateMeetingRequest(
     val participantIds: List<UUID>,
 
     @Schema(
-        description = "Profile image ID",
-        example = "123e4567-e89b-12d3-a456-426614174000"
+        description = "Profile image",
+        example = "dfskdsjdsfkldsflkewfmxxkkwmsmskwowxspqpqlkwkdldlpw..."
     )
     @field:NotBlank
-    val profileImageId: UUID
+    val profileImage: String
 )
