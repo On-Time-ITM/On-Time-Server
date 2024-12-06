@@ -1,4 +1,4 @@
-package org.itm.ontime.presentation.auth
+package org.itm.ontime.presentation.controller.auth
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -7,23 +7,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.itm.ontime.application.auth.exception.common.InvalidRefreshTokenException
-import org.itm.ontime.application.auth.exception.local.AlreadyExistsPhoneNumberException
-import org.itm.ontime.application.auth.exception.local.InvalidPasswordException
-import org.itm.ontime.application.auth.service.AuthService
-import org.itm.ontime.infrastructure.security.CustomUserDetails
-import org.itm.ontime.presentation.auth.request.LoginRequest
-import org.itm.ontime.presentation.auth.request.SignUpRequest
-import org.itm.ontime.presentation.auth.response.AuthResponse
-import org.itm.ontime.presentation.auth.response.TokenInfo
-import org.itm.ontime.presentation.user.request.TokenRequest
-import org.itm.ontime.presentation.user.response.UserResponse
+import org.itm.ontime.application.exception.auth.AlreadyExistsPhoneNumberException
+import org.itm.ontime.application.exception.auth.InvalidPasswordException
+import org.itm.ontime.application.exception.auth.InvalidRefreshTokenException
+import org.itm.ontime.application.service.auth.AuthService
+import org.itm.ontime.presentation.dto.request.auth.LoginRequest
+import org.itm.ontime.presentation.dto.request.auth.SignUpRequest
+import org.itm.ontime.presentation.dto.request.auth.TokenRequest
+import org.itm.ontime.presentation.dto.response.auth.AuthResponse
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 
@@ -48,7 +41,7 @@ class AuthController(
     @PostMapping("/signup")
     fun signUp(
         @Valid @RequestBody request: SignUpRequest
-    ): ResponseEntity<UserResponse> {
+    ): ResponseEntity<AuthResponse> {
         val response = authService.signUp(request)
         return ResponseEntity.ok(response)
     }
@@ -84,7 +77,7 @@ class AuthController(
     @PostMapping("/reissue")
     fun reissueToken(
         @Valid @RequestBody request: TokenRequest
-    ): ResponseEntity<TokenInfo> {
+    ): ResponseEntity<AuthResponse> {
         val response = authService.reissue(request)
         return ResponseEntity.ok(response)
     }
@@ -100,11 +93,8 @@ class AuthController(
         ]
     )
     @PostMapping("/logout")
-    fun logout(@AuthenticationPrincipal userDetails: CustomUserDetails?): ResponseEntity<Unit> {
-        if (userDetails != null) {
-            val userId = UUID.fromString(userDetails.username)
-            authService.logout(userId)
-        }
+    fun logout(@RequestParam userId: UUID): ResponseEntity<Unit> {
+        authService.logout(userId)
         return ResponseEntity.ok().build()
     }
 }
