@@ -1,7 +1,8 @@
-package org.itm.ontime.presentation.friendship.response
+package org.itm.ontime.presentation.dto.response.friendship
 
 import io.swagger.v3.oas.annotations.media.Schema
-import org.itm.ontime.presentation.user.response.UserResponse
+import org.itm.ontime.domain.friendship.Friendship
+import org.itm.ontime.presentation.dto.response.user.UserResponse
 import java.time.LocalDateTime
 import java.util.*
 
@@ -18,13 +19,12 @@ data class FriendRequestResponse(
 ) {
     companion object {
         @JvmStatic
-        fun of(
-            friendshipId: UUID,
-            requester: UserResponse,
-            createdAt: LocalDateTime
-        ): FriendRequestResponse {
-            return FriendRequestResponse(friendshipId, requester, createdAt)
+        fun of(friendship: Friendship): FriendRequestResponse {
+            return FriendRequestResponse(
+                friendshipId = friendship.id,
+                requester = UserResponse.of(friendship.requester),
+                createdAt = friendship.createdDate
+            )
         }
     }
 }
-

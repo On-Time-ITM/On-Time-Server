@@ -214,7 +214,7 @@ class FriendShipController(
         @Schema(description = "ID of the user to get friends for", example = "123e4567-e89b-12d3-a456-426614174000")
         @PathVariable userId: UUID
     ) : ResponseEntity<List<UserResponse>> {
-        val friends = friendshipService.getFriendList(userId)
+        val friends = friendshipService.getFriends(userId)
         return ResponseEntity.ok(friends)
     }
 

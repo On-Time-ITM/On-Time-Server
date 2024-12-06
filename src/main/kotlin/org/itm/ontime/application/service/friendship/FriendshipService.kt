@@ -113,7 +113,7 @@ class FriendshipService (
         return friendship.id
     }
 
-    fun getFriendList(userId: UUID) : List<UserResponse> {
+    fun getFriends(userId: UUID) : List<UserResponse> {
         val user = userRepository.findById(userId)
             .orElseThrow { UserNotFoundException.fromId(userId) }
 
