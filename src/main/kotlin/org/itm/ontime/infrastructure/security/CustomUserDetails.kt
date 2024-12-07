@@ -1,4 +1,4 @@
-package org.itm.ontime.infrastructure.auth
+package org.itm.ontime.infrastructure.security
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails

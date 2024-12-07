@@ -1,4 +1,4 @@
-package org.itm.ontime.infrastructure.auth
+package org.itm.ontime.infrastructure.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

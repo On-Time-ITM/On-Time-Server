@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import org.itm.ontime.domain.common.Location
-import org.itm.ontime.domain.participant.ParticipantLocation
+import org.itm.ontime.domain.participant.Participant
 import java.util.*
 
 @Schema(description = "Participant location information")
@@ -21,14 +21,14 @@ data class ParticipantLocationInfo (
         example = "[{\"location\": {\"latitude\": 37.7749, \"longitude\": -122.4194}, \"address\": Frontier}]"
     )
     @field:NotNull
-    val participantLocation: Location
+    val participantLocation: Location?
 ) {
     companion object {
         @JvmStatic
-        fun of (participantLocation: ParticipantLocation) =
+        fun of (participant: Participant) =
             ParticipantLocationInfo(
-                participantId = participantLocation.participant.id,
-                participantLocation = participantLocation.location
+                participantId = participant.id,
+                participantLocation = participant.location
             )
     }
 }

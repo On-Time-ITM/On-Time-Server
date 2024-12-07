@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.*
 import org.itm.ontime.domain.common.AccountInfo
 import org.itm.ontime.domain.common.Location
+import org.springframework.format.annotation.DateTimeFormat
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
@@ -23,6 +24,7 @@ data class CreateMeetingRequest(
     )
     @field:NotBlank
     @field:Future
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     val meetingDateTime: LocalDateTime,
 
     @Schema(description = "Meeting location")

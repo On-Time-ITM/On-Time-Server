@@ -42,7 +42,7 @@ class MeetingService(
             .orElseThrow{ UserNotFoundException.fromId(userId) }
 
         return MeetingResponse.of(
-            meetingRepository.findAllByParticipantId(user.id)
+            meetingRepository.findAllByParticipantsParticipantId(user.id)
         )
     }
 

@@ -1,4 +1,4 @@
-package org.itm.ontime.infrastructure.auth
+package org.itm.ontime.infrastructure.security
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

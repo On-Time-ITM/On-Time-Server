@@ -1,4 +1,4 @@
-package org.itm.ontime.infrastructure.auth
+package org.itm.ontime.infrastructure.security
 
 import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
