@@ -2,14 +2,12 @@ package org.itm.ontime.application.service.participant
 
 import org.itm.ontime.application.exception.meeting.MeetingNotFoundException
 import org.itm.ontime.application.exception.participant.arrival.AlreadyArrivedException
-import org.itm.ontime.application.exception.participant.arrival.ArrivalNotFoundException
 import org.itm.ontime.application.exception.participant.participant.NotParticipantException
-import org.itm.ontime.application.service.user.UserStatisticService
+import org.itm.ontime.application.service.user.UserService
 import org.itm.ontime.domain.meeting.Meeting
 import org.itm.ontime.domain.participant.Participant
 import org.itm.ontime.domain.participant.ParticipantArrivalStatus
 import org.itm.ontime.infrastructure.repository.meeting.MeetingRepository
-import org.itm.ontime.infrastructure.repository.participant.ParticipantArrivalRepository
 import org.itm.ontime.infrastructure.repository.participant.ParticipantRepository
 import org.itm.ontime.presentation.dto.request.participant.ParticipantArrivalResponse
 import org.springframework.stereotype.Service
@@ -19,17 +17,15 @@ import java.util.*
 
 @Service
 class ParticipantArrivalService(
-    private val arrivalRepository: ParticipantArrivalRepository,
     private val participantRepository: ParticipantRepository,
     private val meetingRepository: MeetingRepository,
-    private val userStatisticService: UserStatisticService
+    private val userService: UserService
 ) {
     @Transactional(readOnly = true)
     fun getParticipantArrival(meetingId: UUID, participantId: UUID): ParticipantArrivalResponse {
         val (meeting, participant) = validateMeetingAndParticipant(meetingId, participantId)
 
-        val arrival = arrivalRepository.findByParticipantId(participant.id)
-            ?: throw ArrivalNotFoundException(meeting.id, participant.id)
+        val arrival = participant.arrival
 
         return ParticipantArrivalResponse.of(meeting.id, participant.id, arrival)
     }
@@ -60,8 +56,7 @@ class ParticipantArrivalService(
     ): ParticipantArrivalResponse {
         val (meeting, participant) = validateMeetingAndParticipant(meetingId, participantId)
 
-        val arrival = arrivalRepository.findByParticipantId(participant.id)
-            ?: throw ArrivalNotFoundException(meeting.id, participant.id)
+        val arrival = participant.arrival
 
         if (arrival.status == ParticipantArrivalStatus.ARRIVED) {
             throw AlreadyArrivedException(participant.id, meeting.id)
@@ -70,7 +65,7 @@ class ParticipantArrivalService(
         val isLate = isLate(arrivalTime, meeting.meetingDateTime)
         arrival.markArrival(arrivalTime, isLate)
 
-        userStatisticService.updateUserStatistics(
+        userService.updateUserStatistics(
             userId = participant.participant.id,
             isLate = isLate
         )

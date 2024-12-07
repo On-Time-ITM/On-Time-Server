@@ -9,6 +9,7 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "participant_arrivals")
 class ParticipantArrival(
+
     @Column(nullable = false) var status: ParticipantArrivalStatus = ParticipantArrivalStatus.NOT_ARRIVED,
 
     @Column(nullable = true) var arrivedTime: LocalDateTime? = null,

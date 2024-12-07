@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 interface ParticipantArrivalRepository : JpaRepository<ParticipantArrival, UUID> {
-    fun findByParticipantId(participantId: UUID): ParticipantArrival?
 }

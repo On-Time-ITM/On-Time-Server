@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.itm.ontime.application.service.participant.ParticipantArrivalService
 import org.itm.ontime.presentation.dto.request.participant.ParticipantArrivalResponse
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
@@ -87,7 +88,7 @@ class ParticipantArrivalController(
     fun markArrivalInfo(
         @PathVariable meetingId: UUID,
         @PathVariable participantId: UUID,
-        @RequestParam arrivalTime: LocalDateTime
+        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX") arrivalTime: LocalDateTime
     ) : ResponseEntity<ParticipantArrivalResponse> {
         val response = participantArrivalService.markArrival(meetingId, participantId, arrivalTime)
         return ResponseEntity.ok(response)
