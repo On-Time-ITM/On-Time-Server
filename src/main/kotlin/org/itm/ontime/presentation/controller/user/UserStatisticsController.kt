@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.itm.ontime.application.service.user.UserStatisticService
+import org.itm.ontime.application.service.user.UserService
 import org.itm.ontime.presentation.dto.response.user.UserStatisticsResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,7 +17,7 @@ import java.util.*
 @RequestMapping("api/v1/user/{userId}/statistics")
 @Tag(name = "User Statistics", description = "User statistics API")
 class UserStatisticsController(
-    private val userStatisticService: UserStatisticService
+    private val userService: UserService
 ) {
     @Operation(
         summary = "Get user statistics",
@@ -35,7 +35,7 @@ class UserStatisticsController(
     )
     @GetMapping
     fun getUserStatistics(@PathVariable userId: UUID): ResponseEntity<UserStatisticsResponse> {
-        val response = userStatisticService.getUserStatistics(userId)
+        val response = userService.getUserStatistics(userId)
         return ResponseEntity.ok(response)
     }
 }

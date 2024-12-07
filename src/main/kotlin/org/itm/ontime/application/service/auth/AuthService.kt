@@ -7,10 +7,9 @@ import org.itm.ontime.application.exception.auth.InvalidRefreshTokenException
 import org.itm.ontime.application.exception.auth.UserAlreadyLogoutException
 import org.itm.ontime.application.exception.user.UserNotFoundException
 import org.itm.ontime.domain.user.User
-import org.itm.ontime.domain.user.UserStatistics
-import org.itm.ontime.infrastructure.auth.JwtTokenProvider
 import org.itm.ontime.infrastructure.repository.auth.RefreshTokenRepository
 import org.itm.ontime.infrastructure.repository.user.UserRepository
+import org.itm.ontime.infrastructure.security.JwtTokenProvider
 import org.itm.ontime.presentation.dto.request.auth.LoginRequest
 import org.itm.ontime.presentation.dto.request.auth.SignUpRequest
 import org.itm.ontime.presentation.dto.request.auth.TokenRequest
@@ -38,7 +37,6 @@ class AuthService(
             phoneNumber = request.phoneNumber,
             password = passwordEncoder.encode(request.password),
             name = request.name,
-            statistics = UserStatistics()
         )
 
         userRepository.save(user)

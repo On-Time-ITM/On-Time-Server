@@ -37,7 +37,7 @@ data class UserResponse(
                 id = user.id,
                 name = user.name,
                 phoneNumber = user.phoneNumber,
-                statistics = UserStatisticsInfo.of(user.statistics)
+                statistics = UserStatisticsInfo.of(user)
             )
     }
 }

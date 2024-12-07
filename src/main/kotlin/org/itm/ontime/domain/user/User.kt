@@ -1,6 +1,9 @@
 package org.itm.ontime.domain.user
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 import org.itm.ontime.domain.common.BaseEntity
 import org.itm.ontime.domain.friendship.Friendship
 import org.itm.ontime.domain.participant.Participant
@@ -26,8 +29,30 @@ class User(
     @OneToMany(mappedBy = "participant")
     val participants: MutableList<Participant> = mutableListOf(),
 
-    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
-    @JoinColumn(name = "statistics_id")
-    var statistics: UserStatistics
+    @Column(nullable = false)
+    var totalMeetings: Int = 0,
 
-) : BaseEntity()
+    @Column(nullable = false)
+    var totalArrivedMeetings: Int = 0,
+
+    @Column(nullable = false)
+    var totalLateMeetings: Int = 0,
+
+    @Column(nullable = false)
+    var lateRate : Double = 0.0,
+
+) : BaseEntity() {
+    fun updateStatistics(isLate: Boolean) {
+        if (isLate) {
+            totalLateMeetings++
+        }
+        totalMeetings++
+        totalArrivedMeetings++
+        calculateLateRate()
+    }
+    fun calculateLateRate() {
+        lateRate = if (totalMeetings > 0) {
+            (totalLateMeetings.toDouble() / totalMeetings) * 100
+        } else 0.0
+    }
+}
