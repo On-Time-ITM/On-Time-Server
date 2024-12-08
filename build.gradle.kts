@@ -58,6 +58,8 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:2.3.2")
     implementation("org.springframework:spring-webflux")
     implementation("io.projectreactor.netty:reactor-netty")
+    implementation("com.google.firebase:firebase-admin:9.2.0")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.16.1")
 
 }
 
