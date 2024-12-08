@@ -3,8 +3,7 @@ package org.itm.ontime.infrastructure.external.qrCode
 import org.itm.ontime.application.exception.meeting.MeetingNotFoundException
 import org.itm.ontime.infrastructure.external.qrCode.dto.QRCodeRequest
 import org.itm.ontime.infrastructure.external.qrCode.dto.QRCodeResponse
-import org.itm.ontime.infrastructure.external.qrCode.exception.QRCodeAlreadyExistsException
-import org.itm.ontime.infrastructure.external.qrCode.exception.QRCodeNotFoundException
+import org.itm.ontime.infrastructure.external.qrCode.exception.FCMTokenInvalidException
 import org.itm.ontime.infrastructure.repository.meeting.MeetingRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -34,7 +33,7 @@ class QRCodeService(
     fun getQRCode(meetingId: UUID) : QRCodeResponse {
         val meeting = meetingRepository.findById(meetingId)
             .orElseThrow{ throw MeetingNotFoundException(meetingId) }
-        val qrCode = meeting.qrCode ?: throw QRCodeNotFoundException(meetingId)
+        val qrCode = meeting.qrCode ?: throw FCMTokenInvalidException(meetingId)
 
         return QRCodeResponse.of(meeting.id, qrCode)
     }

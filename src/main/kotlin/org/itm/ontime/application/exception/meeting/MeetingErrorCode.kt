@@ -15,9 +15,4 @@ enum class MeetingErrorCode(
     NOT_MEETING_HOST(HttpStatus.FORBIDDEN, "M004", "Not a host of this meeting"),
     NOT_MEETING_PARTICIPANT(HttpStatus.FORBIDDEN, "M005", "Not a participant of this meeting"),
 
-    ALREADY_ARRIVED(HttpStatus.BAD_REQUEST, "A001", "Already arrived"),
-
-    QR_CODE_NOT_FOUND(HttpStatus.BAD_REQUEST, "Q001", "QR code not found"),
-    QR_CODE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Q002", "QR code already exists"),
-
 }
