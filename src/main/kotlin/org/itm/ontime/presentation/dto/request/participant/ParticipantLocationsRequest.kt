@@ -12,4 +12,6 @@ data class ParticipantLocationsRequest (
     )
     @field:NotBlank
     val participantLocationInfos : List<ParticipantLocationInfo>
-)
+) {
+    constructor() : this(emptyList())
+}
