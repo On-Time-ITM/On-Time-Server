@@ -1,4 +1,4 @@
-package org.itm.ontime.presentation.dto.request.participant
+package org.itm.ontime.presentation.dto.common
 
 import io.swagger.v3.oas.annotations.media.Schema
 import org.itm.ontime.domain.participant.ParticipantArrival
@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Schema(description = "Arrival information of a participant")
-data class ParticipantArrivalResponse(
+data class ParticipantArrivalInfo(
     @Schema(description = "Meeting ID", example = "123e4567-e89b-12d3-a456-426614174000")
     val meetingId: UUID,
 
@@ -27,8 +27,8 @@ data class ParticipantArrivalResponse(
 ) {
     companion object {
         @JvmStatic
-        fun of(meetingId: UUID, participantId: UUID, arrival: ParticipantArrival) : ParticipantArrivalResponse =
-            ParticipantArrivalResponse(
+        fun of(meetingId: UUID, participantId: UUID, arrival: ParticipantArrival) : ParticipantArrivalInfo =
+            ParticipantArrivalInfo(
                 meetingId = meetingId,
                 participantId = participantId,
                 arrivalTime = arrival.arrivedTime,

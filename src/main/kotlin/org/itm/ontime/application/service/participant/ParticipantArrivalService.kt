@@ -9,7 +9,7 @@ import org.itm.ontime.domain.participant.Participant
 import org.itm.ontime.domain.participant.ParticipantArrivalStatus
 import org.itm.ontime.infrastructure.repository.meeting.MeetingRepository
 import org.itm.ontime.infrastructure.repository.participant.ParticipantRepository
-import org.itm.ontime.presentation.dto.request.participant.ParticipantArrivalResponse
+import org.itm.ontime.presentation.dto.common.ParticipantArrivalInfo
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -22,23 +22,23 @@ class ParticipantArrivalService(
     private val userService: UserService
 ) {
     @Transactional(readOnly = true)
-    fun getParticipantArrival(meetingId: UUID, participantId: UUID): ParticipantArrivalResponse {
+    fun getParticipantArrival(meetingId: UUID, participantId: UUID): ParticipantArrivalInfo {
         val (meeting, participant) = validateMeetingAndParticipant(meetingId, participantId)
 
         val arrival = participant.arrival
 
-        return ParticipantArrivalResponse.of(meeting.id, participant.id, arrival)
+        return ParticipantArrivalInfo.of(meeting.id, participant.id, arrival)
     }
 
     @Transactional(readOnly = true)
-    fun getParticipantArrivals(meetingId: UUID): List<ParticipantArrivalResponse> {
+    fun getParticipantArrivals(meetingId: UUID): List<ParticipantArrivalInfo> {
         val meeting = meetingRepository.findById(meetingId)
            .orElseThrow { MeetingNotFoundException(meetingId) }
 
         val participants = participantRepository.findAllByMeetingId(meetingId)
 
         val arrivalResponses = participants.map { participant ->
-            ParticipantArrivalResponse.of(
+            ParticipantArrivalInfo.of(
                 meetingId = meeting.id,
                 participantId = participant.id,
                 arrival = participant.arrival
@@ -53,7 +53,7 @@ class ParticipantArrivalService(
         meetingId: UUID,
         participantId: UUID,
         arrivalTime: LocalDateTime
-    ): ParticipantArrivalResponse {
+    ): ParticipantArrivalInfo {
         val (meeting, participant) = validateMeetingAndParticipant(meetingId, participantId)
 
         val arrival = participant.arrival
@@ -70,7 +70,7 @@ class ParticipantArrivalService(
             isLate = isLate
         )
 
-        return ParticipantArrivalResponse.of(meeting.id, participant.id, arrival)
+        return ParticipantArrivalInfo.of(meeting.id, participant.id, arrival)
     }
 
     private fun validateMeetingAndParticipant(
