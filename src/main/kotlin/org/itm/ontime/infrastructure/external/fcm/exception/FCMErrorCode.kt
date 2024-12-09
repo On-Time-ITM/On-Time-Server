@@ -11,4 +11,5 @@ enum class FCMErrorCode(
     FCM_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "F001", "Failed to send push notification"),
     FCM_TOKEN_INVALID(HttpStatus.BAD_REQUEST, "F002", "Invalid FCM token"),
     FCM_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "F003", "FCM token not found"),
+    FCM_TOKEN_UNREGISTERED(HttpStatus.BAD_REQUEST, "F004", "FCM token was not registered")
 }

@@ -1,7 +1,8 @@
 package org.itm.ontime.infrastructure.external.fcm.dto
 
-data class MessageRequest(
+import java.util.*
+
+data class FCMTokenRequest(
+    val userId: UUID,
     val token: String,
-    val title: String,
-    val body: String,
 )
