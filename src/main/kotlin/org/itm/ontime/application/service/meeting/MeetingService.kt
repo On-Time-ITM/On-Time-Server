@@ -62,6 +62,7 @@ class MeetingService(
             location = request.location,
             lateFee = request.lateFee,
             accountInfo = request.accountInfo,
+            participantCount = 0,
             host = host,
             profileImage = request.profileImage
         )
@@ -74,6 +75,7 @@ class MeetingService(
             ).also {
                 participantRepository.save(it)
                 meeting.participants.add(it)
+                meeting.participantCount.inc()
             }
         }
 

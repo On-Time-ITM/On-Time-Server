@@ -50,7 +50,13 @@ data class MeetingResponse(
         description = "Profile image",
         example = "kewjfpqofjofjksldjkdjflwekflwejflqwjfek...."
     )
-    val profileImage: String
+    val profileImage: String,
+
+    @Schema(
+        description = "Participant count",
+        example = "3"
+    )
+    val participantCount: Int
 
 ) {
     companion object {
@@ -63,7 +69,8 @@ data class MeetingResponse(
                 meeting.location,
                 meeting.lateFee,
                 meeting.accountInfo,
-                meeting.profileImage
+                meeting.profileImage,
+                meeting.participantCount
             )
 
         fun of(meetings: List<Meeting>): List<MeetingResponse> = meetings.map(Companion::of)

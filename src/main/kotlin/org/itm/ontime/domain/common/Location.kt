@@ -1,5 +1,6 @@
 package org.itm.ontime.domain.common
 
+import jakarta.annotation.Nullable
 import jakarta.persistence.Embeddable
 
 @Embeddable

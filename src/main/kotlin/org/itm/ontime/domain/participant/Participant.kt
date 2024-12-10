@@ -18,6 +18,11 @@ class Participant(
     val participant: User,
 
     @Embedded
+    @AttributeOverrides(
+        AttributeOverride(name = "latitude", column = Column(nullable = true)),
+        AttributeOverride(name = "longitude", column = Column(nullable = true)),
+        AttributeOverride(name = "address", column = Column(nullable = true))
+    )
     var location: Location? = null,
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])

@@ -2,6 +2,7 @@ package org.itm.ontime.application.service.user
 
 import org.itm.ontime.application.exception.user.UserNotFoundException
 import org.itm.ontime.infrastructure.repository.user.UserRepository
+import org.itm.ontime.presentation.dto.response.user.UserResponse
 import org.itm.ontime.presentation.dto.response.user.UserStatisticsResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -12,11 +13,11 @@ class UserService(
     private val userRepository: UserRepository
 ) {
     @Transactional(readOnly = true)
-    fun getUserStatistics(userId: UUID): UserStatisticsResponse {
+    fun getUserStatistics(userId: UUID): UserResponse {
         val user = userRepository.findById(userId)
             .orElseThrow { UserNotFoundException.fromId(userId) }
 
-        return UserStatisticsResponse.of(user)
+        return UserResponse.of(user)
     }
 
     @Transactional

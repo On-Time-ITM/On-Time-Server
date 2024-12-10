@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.itm.ontime.application.service.user.UserService
+import org.itm.ontime.presentation.dto.response.user.UserResponse
 import org.itm.ontime.presentation.dto.response.user.UserStatisticsResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -34,7 +35,7 @@ class UserStatisticsController(
         )
     )
     @GetMapping
-    fun getUserStatistics(@PathVariable userId: UUID): ResponseEntity<UserStatisticsResponse> {
+    fun getUserStatistics(@PathVariable userId: UUID): ResponseEntity<UserResponse> {
         val response = userService.getUserStatistics(userId)
         return ResponseEntity.ok(response)
     }

@@ -36,9 +36,13 @@ class Meeting(
     @OneToMany(mappedBy = "meeting", cascade = [CascadeType.ALL], orphanRemoval = true)
     val participants: MutableList<Participant> = mutableListOf(),
 
+    @Column(nullable = false)
+    val participantCount: Int,
+
     @Column(nullable = true) var qrCode: String ?= null,
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
+    @Lob
     val profileImage: String
 
 ) : BaseEntity() {
