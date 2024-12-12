@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class FCMClient(
-    private var firebaseApp: FirebaseApp,
+    private val firebaseApp: FirebaseApp,
     private val fcmTokenRepository: FCMTokenRepository,
     private val userRepository: UserRepository
 ) {

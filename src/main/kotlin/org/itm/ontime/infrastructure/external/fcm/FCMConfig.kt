@@ -17,11 +17,14 @@ class FCMConfig(
     fun firebaseManager() : FirebaseApp {
         val account = ResourceUtils.getFile(key).inputStream()
 
-        val options = FirebaseOptions.builder()
-            .setCredentials(GoogleCredentials.fromStream(account))
-            .build()
-
-        return FirebaseApp.initializeApp(options)
+        return try {
+            FirebaseApp.getInstance()
+        } catch (e: IllegalStateException) {
+            val options = FirebaseOptions.builder()
+                .setCredentials(GoogleCredentials.fromStream(account))
+                .build()
+            FirebaseApp.initializeApp(options)
+        }
     }
 
 }
