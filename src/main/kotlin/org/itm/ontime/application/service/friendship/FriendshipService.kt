@@ -19,7 +19,8 @@ import java.util.*
 @Service
 class FriendshipService (
     private val userRepository: UserRepository,
-    private val friendshipRepository: FriendshipRepository
+    private val friendshipRepository: FriendshipRepository,
+    private val friendRequestNotificationService: FriendRequestNotificationService
 ){
     @Transactional(readOnly = true)
     fun searchFriendByPhoneNumber(phoneNumber: String) : UserResponse {
@@ -49,6 +50,8 @@ class FriendshipService (
 
         requester.sentFriendships.add(friendship)
         receiver.receivedFriendships.add(friendship)
+
+        friendRequestNotificationService.sendFriendRequestNotification(receiver, requester)
 
         return friendship.id
     }
