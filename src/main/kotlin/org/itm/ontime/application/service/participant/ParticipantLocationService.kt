@@ -6,7 +6,6 @@ import org.itm.ontime.application.exception.participant.participant.ParticipantN
 import org.itm.ontime.domain.common.Location
 import org.itm.ontime.infrastructure.repository.meeting.MeetingRepository
 import org.itm.ontime.infrastructure.repository.participant.ParticipantRepository
-import org.itm.ontime.infrastructure.repository.user.UserRepository
 import org.itm.ontime.presentation.dto.request.participant.ParticipantLocationsRequest
 import org.itm.ontime.presentation.dto.response.participant.ParticipantLocationInfo
 import org.itm.ontime.presentation.dto.response.participant.ParticipantLocationsResponse
@@ -17,7 +16,7 @@ import java.util.*
 @Service
 class ParticipantLocationService (
     private val participantRepository: ParticipantRepository,
-    private val meetingRepository: MeetingRepository, private val userRepository: UserRepository
+    private val meetingRepository: MeetingRepository
 ){
 
     @Transactional(readOnly = true)
@@ -28,7 +27,7 @@ class ParticipantLocationService (
         val participant = participantRepository.findByMeetingIdAndParticipantId(meeting.id, participantId)
            ?: throw ParticipantNotExistsException(meeting.id)
 
-        return ParticipantLocationInfo.of(participant)
+        return ParticipantLocationInfo.from(participant)
     }
 
     @Transactional(readOnly = true)
@@ -40,7 +39,7 @@ class ParticipantLocationService (
 
         return ParticipantLocationsResponse.of(
             meetingId = meeting.id,
-            participantLocationInfos = participants.map { ParticipantLocationInfo.of(it) }
+            participantLocationInfos = participants.map { ParticipantLocationInfo.from(it) }
         )
     }
 
@@ -50,6 +49,11 @@ class ParticipantLocationService (
             .orElseThrow { MeetingNotFoundException(meetingId) }
 
         request.participantLocationInfos.map { participantLocationInfo ->
+            participantLocationInfo.participantLocation?.let {
+                updateParticipantLocation(meetingId, participantLocationInfo.participantId,
+                    it
+                )
+            }
             val participant = participantRepository.findByMeetingIdAndParticipantId(meeting.id, participantLocationInfo.participantId)
                 ?: throw NotParticipantException(participantLocationInfo.participantId, meeting.id)
 
@@ -76,6 +80,6 @@ class ParticipantLocationService (
 
         participant.updateLocation(participantLocation)
 
-        return ParticipantLocationInfo.of(participant)
+        return ParticipantLocationInfo.from(participant)
     }
 }

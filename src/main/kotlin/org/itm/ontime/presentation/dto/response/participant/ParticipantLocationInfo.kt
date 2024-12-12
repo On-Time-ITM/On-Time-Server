@@ -25,7 +25,14 @@ data class ParticipantLocationInfo (
 ) {
     companion object {
         @JvmStatic
-        fun of (participant: Participant) =
+        fun of (participantId: UUID, participantLocation: Location) =
+            ParticipantLocationInfo(
+                participantId = participantId,
+                participantLocation = participantLocation
+            )
+
+        @JvmStatic
+        fun from(participant: Participant) =
             ParticipantLocationInfo(
                 participantId = participant.id,
                 participantLocation = participant.location
