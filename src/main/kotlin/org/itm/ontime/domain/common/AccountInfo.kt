@@ -6,4 +6,5 @@ import jakarta.persistence.Embeddable
 data class AccountInfo(
     val bankName: String,
     val accountNumber: String,
+    val accountHost: String,
 )
