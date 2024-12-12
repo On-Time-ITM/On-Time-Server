@@ -29,7 +29,7 @@ class Participant(
     @JoinColumn(name = "participant_attendance_id")
     var arrival: ParticipantArrival = ParticipantArrival(),
     ) : BaseEntity() {
-        fun updateLocation(location: Location) {
+        fun updateLocation(location: Location?) {
             this.location = location
         }
     }

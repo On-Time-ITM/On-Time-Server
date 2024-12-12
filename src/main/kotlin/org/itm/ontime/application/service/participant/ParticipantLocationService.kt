@@ -3,8 +3,10 @@ package org.itm.ontime.application.service.participant
 import org.itm.ontime.application.exception.meeting.MeetingNotFoundException
 import org.itm.ontime.application.exception.participant.participant.NotParticipantException
 import org.itm.ontime.application.exception.participant.participant.ParticipantNotExistsException
+import org.itm.ontime.domain.common.Location
 import org.itm.ontime.infrastructure.repository.meeting.MeetingRepository
 import org.itm.ontime.infrastructure.repository.participant.ParticipantRepository
+import org.itm.ontime.infrastructure.repository.user.UserRepository
 import org.itm.ontime.presentation.dto.request.participant.ParticipantLocationsRequest
 import org.itm.ontime.presentation.dto.response.participant.ParticipantLocationInfo
 import org.itm.ontime.presentation.dto.response.participant.ParticipantLocationsResponse
@@ -15,7 +17,7 @@ import java.util.*
 @Service
 class ParticipantLocationService (
     private val participantRepository: ParticipantRepository,
-    private val meetingRepository: MeetingRepository
+    private val meetingRepository: MeetingRepository, private val userRepository: UserRepository
 ){
 
     @Transactional(readOnly = true)
@@ -43,7 +45,7 @@ class ParticipantLocationService (
     }
 
     @Transactional
-    fun updateUserLocations(meetingId: UUID, request: ParticipantLocationsRequest): ParticipantLocationsResponse {
+    fun updateParticipantLocations(meetingId: UUID, request: ParticipantLocationsRequest): ParticipantLocationsResponse {
         val meeting = meetingRepository.findById(meetingId)
             .orElseThrow { MeetingNotFoundException(meetingId) }
 
@@ -58,5 +60,22 @@ class ParticipantLocationService (
             meetingId = meeting.id,
             participantLocationInfos = request.participantLocationInfos
         )
+    }
+
+
+    @Transactional
+    fun updateParticipantLocation(
+        meetingId: UUID,
+        participantId: UUID,
+        participantLocation: Location
+    ): ParticipantLocationInfo {
+        val meeting = meetingRepository.findById(meetingId)
+            .orElseThrow { MeetingNotFoundException(meetingId) }
+        val participant = participantRepository.findByMeetingIdAndParticipantId(meeting.id, participantId)
+            ?: throw NotParticipantException(participantId, meeting.id)
+
+        participant.updateLocation(participantLocation)
+
+        return ParticipantLocationInfo.of(participant)
     }
 }
