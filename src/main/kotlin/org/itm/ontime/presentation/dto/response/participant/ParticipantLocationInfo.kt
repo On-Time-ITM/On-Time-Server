@@ -17,6 +17,13 @@ data class ParticipantLocationInfo (
     val participantId: UUID,
 
     @Schema(
+        description = "Participant's name",
+        example = "saeyeon"
+    )
+    @field:NotBlank
+    val participantName: String,
+
+    @Schema(
         description = "Participant current location",
         example = "[{\"location\": {\"latitude\": 37.7749, \"longitude\": -122.4194}, \"address\": Frontier}]"
     )
@@ -25,9 +32,10 @@ data class ParticipantLocationInfo (
 ) {
     companion object {
         @JvmStatic
-        fun of (participantId: UUID, participantLocation: Location) =
+        fun of (participantId: UUID, participantName: String, participantLocation: Location) =
             ParticipantLocationInfo(
                 participantId = participantId,
+                participantName = participantName,
                 participantLocation = participantLocation
             )
 
@@ -35,6 +43,7 @@ data class ParticipantLocationInfo (
         fun from(participant: Participant) =
             ParticipantLocationInfo(
                 participantId = participant.id,
+                participantName = participant.participant.name,
                 participantLocation = participant.location
             )
     }
