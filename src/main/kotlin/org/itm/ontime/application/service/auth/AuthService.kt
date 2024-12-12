@@ -69,6 +69,7 @@ class AuthService(
         )
     }
 
+    @Transactional
     fun logout(userId: UUID) {
         refreshTokenRepository.deleteByUserId(userId)
     }
